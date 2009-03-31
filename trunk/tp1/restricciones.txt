@@ -1,0 +1,15 @@
+restricciones
+-todo inmueble que tiene asignado un vendedor, tiene que TENER UN CONTRato de venta vigente 
+-los cambios de los textos no se deben solapar en cuanto a fechas
+-el precio de venta tiene que ser mayor al precio minimo del contrato
+-la fecha que se mostro el inmueble tiene que estar dentro de la fecha de vigencia del contrato
+-la fecha que se compro el inmueble tiene que estar dentro de la fecha de vigencia del contrato
+-el comprador no puede ser el mismo que el propietario
+-fecha inicio no puede ser mas grande que fecha de fin
+
+
+asumimos
+-el inmueble tiene gastos
+-la mayoria tiene planos
+-asumimos que se vende o se compra, no las 2
+- 
