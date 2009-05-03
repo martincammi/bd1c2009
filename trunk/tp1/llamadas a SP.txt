@@ -1,0 +1,200 @@
+select count(*) 
+from comprador
+
+select count(*) 
+from vendedor
+
+select count(*) 
+from se_lo_mostro
+
+desc tiene_asignado
+
+
+
+exec pq_comprador.sp_insert(6,'apellido6','nombre6','direccion6','telefono6','email6')
+
+exec pq_comprador.sp_insert(:poronga3,'apellido6','nombre6','direccion6','telefono6','email6',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido7','nombre7','direccion7','telefono7','email7',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido8','nombre8','direccion8','telefono8','email8',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido9','nombre9','direccion9','telefono9','email9',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido10','nombre10','direccion10','telefono10','email10',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido11','nombre11','direccion11','telefono11','email11',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido12','nombre12','direccion12','telefono12','email12',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido13','nombre13','direccion13','telefono13','email13',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido14','nombre14','direccion14','telefono14','email14',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido15','nombre15','direccion15','telefono15','email15',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido16','nombre16','direccion16','telefono16','email16',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido17','nombre17','direccion17','telefono17','email17',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido18','nombre18','direccion18','telefono18','email18',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido19','nombre19','direccion19','telefono19','email19',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido20','nombre20','direccion20','telefono20','email20',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido21','nombre21','direccion21','telefono21','email21',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido22','nombre22','direccion22','telefono22','email22',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido23','nombre23','direccion23','telefono23','email23',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido24','nombre24','direccion24','telefono24','email24',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido25','nombre25','direccion25','telefono25','email25',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido26','nombre26','direccion26','telefono26','email26',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido27','nombre27','direccion27','telefono27','email27',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido28','nombre28','direccion28','telefono28','email28',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido29','nombre29','direccion29','telefono29','email29',:poronga, :poronga2);
+exec pq_comprador.sp_insert(:poronga3,'apellido30','nombre30','direccion30','telefono30','email30',:poronga, :poronga2);
+
+exec pq_vendedor.sp_insert(:poronga3,'apellido vend. 6','domicilio vend. 6','telefono vend. 6','email vend. 6',to_date('01012009','DDMMYYYY'),'experiencia 6',:poronga, :poronga2);
+exec pq_vendedor.sp_insert(:poronga3,'apellido vend. 7','domicilio vend. 7','telefono vend. 7','email vend. 7',to_date('02012009','DDMMYYYY'),'experiencia 7',:poronga, :poronga2);
+exec pq_vendedor.sp_insert(:poronga3,'apellido vend. 8','domicilio vend. 8','telefono vend. 8','email vend. 8',to_date('03012009','DDMMYYYY'),'experiencia 8',:poronga, :poronga2);
+exec pq_vendedor.sp_insert(:poronga3,'apellido vend. 9','domicilio vend. 9','telefono vend. 9','email vend. 9',to_date('04012009','DDMMYYYY'),'experiencia 9',:poronga, :poronga2);
+exec pq_vendedor.sp_insert(:poronga3,'apellido vend. 10','domicilio vend. 10','telefono vend. 10','email vend. 10',to_date('05012009','DDMMYYYY'),'experiencia 10',:poronga, :poronga2);
+
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 7','estado 7',7,'plano 7',7,'ori.7',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 8','estado 8',8,'plano 8',8,'ori.8',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 9','estado 9',9,'plano 9',9,'ori.9',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 10','estado 10',10,'plano 10',10,'ori10',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 11','estado 11',11,'plano 11',11,'ori11',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 12','estado 12',12,'plano 12',12,'ori12',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 13','estado 13',13,'plano 13',13,'ori13',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 14','estado 14',14,'plano 14',14,'ori14',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 15','estado 15',15,'plano 15',15,'ori15',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 16','estado 16',16,'plano 16',16,'ori16',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 17','estado 17',17,'plano 17',17,'ori17',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 18','estado 18',18,'plano 18',18,'ori18',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 19','estado 19',19,'plano 19',19,'ori19',1,null,1,1,:poronga, :poronga2);
+exec pq_inmueble.sp_insert(:poronga3,2,'dir. inmueble 20','estado 20',20,'plano 20',20,'ori20',1,null,1,1,:poronga, :poronga2);
+
+select id_contrato,fecha_firma, vigencia_inicio from contrato where fecha_firma >= vigencia_inicio;
+
+exec pq_contrato.sp_insert_venta(:poronga3,7,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),700,70000,60000,'condicion 7',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,8,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),800,80000,70000,'condicion 8',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,9,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),900,90000,80000,'condicion 9',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,10,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1000,100000,90000,'condicion 10',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,11,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1100,110000,100000,'condicion 11',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,12,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1200,120000,110000,'condicion 12',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,13,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1300,130000,120000,'condicion 13',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,14,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1400,140000,130000,'condicion 14',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,15,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1500,150000,140000,'condicion 15',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,16,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1600,160000,150000,'condicion 16',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,17,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1700,170000,160000,'condicion 17',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,18,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1800,180000,170000,'condicion 18',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,19,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),1900,190000,180000,'condicion 19',:poronga, :poronga2);
+exec pq_contrato.sp_insert_venta(:poronga3,20,to_date('01012009','DDMMYYYY'),to_date('01012009','DDMMYYYY'),to_date('01012012','DDMMYYYY'),2000,200000,190000,'condicion 20',:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(1,3,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(1,3,8,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(1,3,9,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(2,3,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(2,3,8,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(2,3,9,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,3,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,3,8,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,3,9,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(2,4,9,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(2,4,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(2,4,11,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,4,9,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,4,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(3,4,11,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(4,4,9,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(4,4,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(4,4,11,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(5,5,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(5,5,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(5,5,11,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(31,5,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(31,5,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(31,5,11,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(32,5,7,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(32,5,10,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(32,5,11,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(33,56,13,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(33,56,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(33,56,15,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(34,56,13,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(34,56,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(34,56,15,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(35,56,13,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(35,56,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(35,56,15,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(36,57,12,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(36,57,13,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(36,57,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(37,57,12,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(37,57,13,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(37,57,14,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(40,58,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(40,58,15,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(41,58,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(41,58,15,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(42,58,14,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(42,58,15,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(45,59,16,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(45,59,17,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(45,59,18,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(46,59,16,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(46,59,17,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(46,59,18,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(47,59,16,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(47,59,17,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(47,59,18,sysdate,:poronga, :poronga2);
+
+exec pq_se_lo_mostro.sp_insert(50,60,17,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(50,60,18,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(50,60,19,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(50,60,20,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(52,60,17,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(52,60,18,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(52,60,19,sysdate,:poronga, :poronga2);
+exec pq_se_lo_mostro.sp_insert(52,60,20,sysdate,:poronga, :poronga2);
+
+
++++++++++++++++++++++++++++++++++++++++
+
+exec pq_tiene_asignado.sp_insert(1,3,7,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(1,3,8,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(1,3,9,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,3,10,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,3,11,null,null,null,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(null,4,7,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,4,8,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,4,9,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(2,4,10,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(2,4,11,sysdate,1,1,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(null,5,7,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,5,8,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,5,9,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,5,10,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,5,11,null,null,null,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(5,56,12,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(50,56,13,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,56,14,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,56,15,null,null,null,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(null,57,12,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,57,13,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(33,57,14,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(33,57,15,sysdate,1,1,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(null,58,12,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,58,13,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,58,14,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,58,15,null,null,null,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(4,59,16,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(40,59,17,sysdate,1,1,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,59,18,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,59,19,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,59,20,null,null,null,:poronga, :poronga2);
+
+exec pq_tiene_asignado.sp_insert(null,60,16,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,60,17,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,60,18,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(null,60,19,null,null,null,:poronga, :poronga2);
+exec pq_tiene_asignado.sp_insert(38,60,20,sysdate,1,1,:poronga, :poronga2);
+
