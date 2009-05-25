@@ -43,7 +43,7 @@ public class NonLockingSchedule extends Schedule
 	@Override
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TODO: Completar
+		//TERMINADO: Completar
 		//Se deben agregar arcos entre T1 -> T2 cuando:
 		//- T1 lee un ítem A y T2 luego escribe A
 		//- T1 escribe un ítem A y T2 luego lee A
@@ -111,6 +111,7 @@ public class NonLockingSchedule extends Schedule
 	@Override
 	public LegalResult analyzeLegality()
 	{
+		//TERMINADO: Completar
 		Collection transaccionesValidas = new HashSet();
 		Iterator iterActions  = getActions().iterator();
 		while(iterActions.hasNext()){

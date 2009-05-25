@@ -139,7 +139,7 @@ public abstract class Schedule
 	{
 		ScheduleGraph graph = buildScheduleGraph();
 		
-		//TODO: Completar
+		//TODO: Completar Es Serializable por Martin Cammi
 		//Usar el grafo para determinar si es o no serializable
 		boolean isSerializable = true;
 		List<List<Action>> possibleExcecution = new ArrayList<List<Action>>();
@@ -163,7 +163,7 @@ public abstract class Schedule
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{
-		//TODO: Completar
+		//TODO: Completar Recuperabilidad - Todos
 		//La idea es que usen los métodos reads, writes & commits de cada acción para analizar recuperabilidad
 		//Recuperable si: 
 		//	Toda transacción T hace COMMIT después de que lo hayan hecho todas las transacciones que escribieron algo que T lee
