@@ -1,5 +1,6 @@
 En ScheduleArch, interpretamos startIndex endIndex como los indices de las acciones que conflictuan dentro de la
 historia.
+-en el armado del grafo nofiltramos las que se deduscan por transitividad
 
 
 
