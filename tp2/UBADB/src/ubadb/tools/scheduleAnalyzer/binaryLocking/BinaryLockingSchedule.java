@@ -42,7 +42,7 @@ public class BinaryLockingSchedule extends Schedule
 	@Override
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TODO: Completar
+		//TODO: Completar Armar Grafo binario - por Matias
 		//Se deben agregar arcos entre T1 -> T2 cuando:
 		//- T1 hace lock de un ítem A y T2 hace lock de A (mcammi: aca creo que debe ser T1 hace UNLOCK y T2 hace LOCK.)
 		//OBS: No agregar arcos que se deducen por transitividad
@@ -70,7 +70,7 @@ public class BinaryLockingSchedule extends Schedule
 	@Override
 	public LegalResult analyzeLegality()
 	{
-		//TODO: Completar
+		//TODO: Completar Analizar la legabilidad binario - por Fabrizio
 		//Un schedule es legal cuando:
 		//- Cada transacción T posee como máximo un commit
 		//- Si T hace LOCK A, luego debe hacer UNLOCK A
