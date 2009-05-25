@@ -1,5 +1,11 @@
 package ubadb.common;
 
+/**
+ * im gay
+ * 
+ * @author pfabrizio
+ *
+ */
 public class PageIdentifier
 {
 	private int tableId;
