@@ -2,16 +2,14 @@ package ubadb.tools.scheduleAnalyzer.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityResult;
-import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityType;
 import ubadb.tools.scheduleAnalyzer.common.results.SerialResult;
 import ubadb.tools.scheduleAnalyzer.common.results.SerializabilityResult;
 import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
-import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingAction;
-import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingActionType;
 
 
 public abstract class Schedule
@@ -100,9 +98,39 @@ public abstract class Schedule
 	//[start] analyzeSeriality
 	public SerialResult analyzeSeriality()
 	{
-		//TODO: Completar
+		//TERMINADO: Completar
 		//Un schedule es serial si para toda transacción, todas sus acciones aparecen consecutivas dentro del schedule
-		return null;
+		boolean isSerial = true;
+		String nonSerialTransaction = "";
+		String message = "";
+		String transactionActual = "";
+		List<String> listTransaction = new ArrayList<String>();
+		for (Iterator iterator = actions.iterator(); iterator.hasNext();) 
+		{
+			Action act = (Action) iterator.next();
+		
+			if (transactionActual == "")
+				transactionActual = act.getTransaction();
+			if (transactionActual != act.getTransaction())
+			{
+				if (listTransaction.contains(act.getTransaction()))
+				{
+					isSerial = false;
+					nonSerialTransaction = act.getTransaction();
+					break;
+				}
+				else
+				{
+					listTransaction.add(transactionActual);
+					transactionActual = act.getTransaction();
+				}
+			}
+			
+		}
+		
+		
+		SerialResult result = new SerialResult(isSerial, nonSerialTransaction, message);
+		return result;
 	}
 	//[end]
 	
@@ -113,10 +141,25 @@ public abstract class Schedule
 		
 		//TODO: Completar
 		//Usar el grafo para determinar si es o no serializable
-		return null;
+		boolean isSerializable = true;
+		List<List<Action>> possibleExcecution = new ArrayList<List<Action>>();
+		List<String> cycle = new ArrayList<String>();
+		String message = "";
+		isSerializable = !tieneCiclos( graph, cycle );
+		if (isSerializable)
+		{
+			//possibleExcecution = ;
+		}
+		SerializabilityResult result = new SerializabilityResult(isSerializable, possibleExcecution, cycle, message );
+		return result;
 	}
 	//[end]
 
+	private boolean tieneCiclos(ScheduleGraph graph, List<String> cycle)
+	{
+		return true;
+	}
+	
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{
