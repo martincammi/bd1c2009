@@ -1,7 +1,7 @@
 package ubadb.common;
 
 /**
- * im gay
+ * 
  * 
  * @author pfabrizio
  *
