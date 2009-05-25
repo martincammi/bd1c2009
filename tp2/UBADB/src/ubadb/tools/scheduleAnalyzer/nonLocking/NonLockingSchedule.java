@@ -1,8 +1,8 @@
 package ubadb.tools.scheduleAnalyzer.nonLocking;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import ubadb.tools.scheduleAnalyzer.common.Action;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
@@ -106,14 +106,24 @@ public class NonLockingSchedule extends Schedule
 		}
 	}
 	
+	//TERMINADO
 	//[start] analyzeLegality
 	@Override
 	public LegalResult analyzeLegality()
 	{
-		//TODO: Completar
-		//Un schedule es legal cuando:
-		//- Cada transacción T posee como máximo un commit
-		return null;
+		Collection transaccionesValidas = new HashSet();
+		Iterator iterActions  = getActions().iterator();
+		while(iterActions.hasNext()){
+			Action action = ((Action) iterActions.next());
+			if(action.commits()){
+				if(transaccionesValidas.contains(action.getTransaction())){
+					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal.");
+				}else{
+					transaccionesValidas.add(action.getTransaction());
+				}
+			}
+		}
+		return new LegalResult(true, "", "La historia es legal.");
 	}
 	//[end]
 }
