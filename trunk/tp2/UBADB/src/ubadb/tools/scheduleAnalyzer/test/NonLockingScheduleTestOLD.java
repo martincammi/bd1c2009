@@ -1,6 +1,5 @@
 package ubadb.tools.scheduleAnalyzer.test;
 
-import junit.framework.TestCase;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleGraph;
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
@@ -8,12 +7,22 @@ import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingAction;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingActionType;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingSchedule;
 
-public class NonLockingScheduleTest extends TestCase{
+public class NonLockingScheduleTestOLD {
 	
-	private NonLockingSchedule sch;
+	private static	NonLockingSchedule sch;
+
+	public static void main(String[] args) {
+		testAll();
+	}
 	
-	public void testGraphGeneration()
+	public static void testAll()
 	{
+		inicio();
+		testGraphGeneration();
+		testLegalidad();
+	}	
+	
+	private static void inicio(){
 		sch = new NonLockingSchedule();
 		try {
 			sch.addTransaction("T1");
@@ -51,7 +60,10 @@ public class NonLockingScheduleTest extends TestCase{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
+	
+	public static void testGraphGeneration()
+	{
 		ScheduleGraph grph = sch.buildScheduleGraph();
 		
 		System.out.println(grph.getTransactions());
@@ -59,7 +71,7 @@ public class NonLockingScheduleTest extends TestCase{
 		
 	}
 	
-	public void testLegalidad(){
+	public static void testLegalidad(){
 		NonLockingSchedule schIlegal = new NonLockingSchedule();
 		try {
 			schIlegal.addTransaction("T1");
@@ -98,6 +110,8 @@ public class NonLockingScheduleTest extends TestCase{
 			e.printStackTrace();
 		}
 		LegalResult resultado = schIlegal.analyzeLegality();
-		assertFalse(resultado.getMessage(), resultado.isLegal() && !resultado.getIllegalTransaction().equals("T3"));
+		System.out.println(resultado.isLegal());
+		System.out.println(resultado.getIllegalTransaction());
+		System.out.println(resultado.getMessage());
 	}
 }
