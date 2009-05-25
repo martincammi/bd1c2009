@@ -43,7 +43,7 @@ public class TernaryLockingSchedule extends Schedule
 	@Override
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TODO: Completar
+		//TODO: Completar Construir Grafo ternario - Andres
 		//Se deben agregar arcos entre T1 -> T2 cuando:
 		//- T1 hace Rlock de un ítem A y T2 luego hace WLock de A
 		//- T1 hace Wlock de un ítem A y T2 luego hace RLock de A
@@ -59,7 +59,7 @@ public class TernaryLockingSchedule extends Schedule
 	@Override
 	public LegalResult analyzeLegality()
 	{
-		//TODO: Completar
+		//TODO: Completar Legabilidad Ternaria - Fabrizio
 		//Un schedule es legal cuando:
 		//- Cada transacción T posee como máximo un commit
 		//- Si T hace RLOCK A o WLOCK A, luego debe hacer UNLOCK A
