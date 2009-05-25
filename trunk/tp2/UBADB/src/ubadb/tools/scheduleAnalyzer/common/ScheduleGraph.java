@@ -35,7 +35,10 @@ public class ScheduleGraph
 	//[start] addArc
 	public void addArc(ScheduleArc arc)
 	{
-		arcs.add(arc);
+		if(!arcs.contains(arc))
+		{
+			arcs.add(arc);
+		}
 	}
 	//[end]
 	

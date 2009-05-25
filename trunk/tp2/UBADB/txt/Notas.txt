@@ -1,0 +1,9 @@
+En ScheduleArch, interpretamos startIndex endIndex como los indices de las acciones que conflictuan dentro de la
+historia.
+
+
+
+Cambios
+
+1) Agregamos el metodo de igualdad en la clase ScheduleArc
+2) modificamos el add del ScheduleGraph para que si existe un arco entre dos transacciones no lo agregue
