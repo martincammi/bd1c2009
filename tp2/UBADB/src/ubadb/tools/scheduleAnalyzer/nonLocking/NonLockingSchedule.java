@@ -1,7 +1,12 @@
 package ubadb.tools.scheduleAnalyzer.nonLocking;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import ubadb.tools.scheduleAnalyzer.common.Action;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
+import ubadb.tools.scheduleAnalyzer.common.ScheduleArc;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleGraph;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleType;
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
@@ -45,10 +50,62 @@ public class NonLockingSchedule extends Schedule
 		//- T1 escribe un ítem A y T2 luego escribe A
 		//OBS: No agregar arcos que se deducen por transitividad
 		
-		return null;
+		ScheduleGraph graph = new ScheduleGraph();
+		
+		// Se agregan las transactions al graph
+		for (Iterator iter = getTransactions().iterator(); iter.hasNext();) 
+		{
+			graph.addTransaction((String)iter.next());
+		}
+		
+		//Se agregan las dependencias al grafo
+		for (int i = 0; i < getActions().size(); i++) {
+			addArcs(graph,i);
+		}
+				
+		return graph;
 	}
 	//[end]
 
+	private void addArcs(ScheduleGraph graph, int indexArc)
+	{
+		NonLockingAction actionAux = (NonLockingAction) getActions().get(indexArc);
+		String item1 = actionAux.getItem();
+		String T1 = actionAux.getTransaction();
+		if(actionAux.reads())
+		{
+			for (int i = indexArc + 1; i < getActions().size(); i++) 
+			{
+				NonLockingAction action = (NonLockingAction) getActions().get(i);
+				String T2 = action.getTransaction();
+				String item2 = action.getItem();
+				if(action.writes() && item1.equals(item2) && !T1.equals(T2)) // Si encuentro un write sobre el mismo item y de transacciones diferentes agrego un arco
+				{
+					ScheduleArc arc = new ScheduleArc(T1,T2,indexArc,i);
+					graph.addArc(arc);
+					break;
+				}
+				
+			}
+		}else if(actionAux.writes())
+		{
+			for (int i = indexArc + 1; i < getActions().size(); i++) 
+			{
+				NonLockingAction action = (NonLockingAction) getActions().get(i);
+				String T2 = action.getTransaction();
+				String item2 = action.getItem();
+				if(item1.equals(item2) && !T1.equals(T2)) // Si encuentro un action sobre el mismo item y de transacciones diferentes agrego un arco.
+				{
+					ScheduleArc arc = new ScheduleArc(T1,T2,indexArc,i);
+					graph.addArc(arc);
+					if(action.writes()) //Si el action es un write termino de buscar
+						break;
+				}
+				
+			}
+		}
+	}
+	
 	//[start] analyzeLegality
 	@Override
 	public LegalResult analyzeLegality()

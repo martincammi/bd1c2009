@@ -1,5 +1,9 @@
 package ubadb.tools.scheduleAnalyzer.binaryLocking;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import ubadb.tools.scheduleAnalyzer.common.Action;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleGraph;
@@ -40,8 +44,23 @@ public class BinaryLockingSchedule extends Schedule
 	{
 		//TODO: Completar
 		//Se deben agregar arcos entre T1 -> T2 cuando:
-		//- T1 hace lock de un ítem A y T2 hace lock de A
+		//- T1 hace lock de un ítem A y T2 hace lock de A (mcammi: aca creo que debe ser T1 hace UNLOCK y T2 hace LOCK.)
 		//OBS: No agregar arcos que se deducen por transitividad
+
+		List<Action> unlocks = new ArrayList<Action>();
+		for (Iterator iter = unlocks.iterator(); iter.hasNext();) { //recorro la lista de acciones
+			BinaryLockingAction BLAction = (BinaryLockingAction) iter.next();
+			
+			if (BinaryLockingActionType.UNLOCK.equals(BLAction.getType())){
+				unlocks.add(BLAction); // Si es un unlock lo guardo
+			}
+			
+			if (BinaryLockingActionType.LOCK.equals(BLAction.getType())){
+				unlocks.add(BLAction); // verifico si hubo un Unlock previo
+			}
+		}
+		
+
 		
 		return null;
 	}

@@ -1,11 +1,12 @@
 package ubadb.tools.scheduleAnalyzer.common;
 
-public class ScheduleArc
-{
+
+public class ScheduleArc {
 	private String startTransaction;
 	private String endTransaction;
 	private int startIndex;
 	private int endIndex;
+	
 	
 	public ScheduleArc(String startTransaction, String endTransaction,int startIndex, int endIndex)
 	{
@@ -33,5 +34,16 @@ public class ScheduleArc
 	public int getEndIndex()
 	{
 		return endIndex;
+	}
+	
+	@Override
+	public boolean equals(Object arc) {
+		return ((ScheduleArc)arc).getStartTransaction().equals(this.startTransaction) &&
+		((ScheduleArc)arc).getEndTransaction().equals(this.endTransaction);
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + this.startTransaction + "," + this.endTransaction + ")";
 	}
 }
