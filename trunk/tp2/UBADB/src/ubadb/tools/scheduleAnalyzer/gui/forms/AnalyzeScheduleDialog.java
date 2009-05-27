@@ -100,8 +100,7 @@ public class AnalyzeScheduleDialog extends JDialog
 			{
 				for(int j = 0; j < result.getPossibleExecutions().get(i).size(); ++j)
 				{
-					Action currentAction = result.getPossibleExecutions().get(i).get(j);
-					executions += currentAction.toString(true) + " ";
+					executions += result.getPossibleExecutions().get(i).get(j) + " ";
 				}
 				
 				executions += "\n";
@@ -205,11 +204,11 @@ public class AnalyzeScheduleDialog extends JDialog
 
         setTitle("Analisis de historia");
 
-        jLabel1.setText("¿Es legal?");
+        jLabel1.setText("Es legal?");
 
-        jLabel4.setText("¿Es serial?");
+        jLabel4.setText("Es serial?");
 
-        jLabel6.setText("¿Es serializable?");
+        jLabel6.setText("Es serializable?");
 
         jLabel8.setText("Recuperabilidad");
 
@@ -295,7 +294,7 @@ public class AnalyzeScheduleDialog extends JDialog
                 .addContainerGap(104, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("¿Es legal?", jPanel2);
+        jTabbedPane1.addTab("Es legal?", jPanel2);
 
         lblSerialTransaction.setText("Es serial | Tx no serial");
 
@@ -322,7 +321,7 @@ public class AnalyzeScheduleDialog extends JDialog
                 .addContainerGap(104, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("¿Es serial?", jPanel3);
+        jTabbedPane1.addTab("Es serial?", jPanel3);
 
         lblSerializableExecutions.setText("Ejecuciones | Ciclo");
 
@@ -349,7 +348,7 @@ public class AnalyzeScheduleDialog extends JDialog
                 .addContainerGap(104, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("¿Es serializable?", jPanel4);
+        jTabbedPane1.addTab("Es serializable?", jPanel4);
 
         lblRecuperabilidadTipo.setText("Tipo");
 
