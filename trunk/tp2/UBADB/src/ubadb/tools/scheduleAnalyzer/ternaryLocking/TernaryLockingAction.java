@@ -34,7 +34,7 @@ public class TernaryLockingAction extends Action
 	} 
 	//[end]
 	
-	//[start] Métodos implementados
+	//[start] Mtodos implementados
 	@Override
 	public boolean commits()
 	{
@@ -44,7 +44,7 @@ public class TernaryLockingAction extends Action
 	@Override
 	public boolean reads()
 	{
-		return ( type.equals(TernaryLockingActionType.RLOCK) || type.equals(TernaryLockingActionType.WLOCK) );
+		return type.equals(TernaryLockingActionType.RLOCK);
 	}
 
 	@Override
@@ -65,19 +65,19 @@ public class TernaryLockingAction extends Action
 		
 		if(type == TernaryLockingActionType.RLOCK)
 		{
-			ret = "RL(" + item + ")";
+			ret += "RL(" + item + ")";
 		}
 		else if(type == TernaryLockingActionType.WLOCK)
 		{
-			ret = "WL(" + item + ")";
+			ret += "WL(" + item + ")";
 		}
 		else if(type == TernaryLockingActionType.UNLOCK)
 		{
-			ret = "U(" + item + ")";
+			ret += "U(" + item + ")";
 		}
 		else if(type == TernaryLockingActionType.COMMIT)
 		{
-			ret = "Commit";
+			ret += "Commit";
 		}
 		
 		return ret;
