@@ -34,7 +34,7 @@ public class NonLockingAction extends Action
 	} 
 	//[end]
 	
-	//[start] Métodos implementados
+	//[start] Mtodos implementados
 	@Override
 	public boolean commits()
 	{
@@ -65,15 +65,15 @@ public class NonLockingAction extends Action
 		
 		if(type == NonLockingActionType.READ)
 		{
-			ret = "R(" + item + ")";
+			ret += "R(" + item + ")";
 		}
 		else if(type == NonLockingActionType.WRITE)
 		{
-			ret = "W(" + item + ")";
+			ret += "W(" + item + ")";
 		}
 		else if(type == NonLockingActionType.COMMIT)
 		{
-			ret = "Commit";
+			ret += "Commit";
 		}
 		
 		return ret;
