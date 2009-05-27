@@ -48,7 +48,7 @@ public abstract class Schedule
 	public void addTransaction(String transaction) throws ScheduleException
 	{
 		if(getTransactions().contains(transaction))
-			throw new ScheduleException("Ya existe una transacción con ese nombre");
+			throw new ScheduleException("Ya existe una transaccin con ese nombre");
 		else
 			getTransactions().add(transaction);
 	}
@@ -58,7 +58,7 @@ public abstract class Schedule
 	public void addItem(String item) throws ScheduleException
 	{
 		if(items.contains(item))
-			throw new ScheduleException("Ya existe una ítem con ese nombre");
+			throw new ScheduleException("Ya existe una tem con ese nombre");
 		else
 			items.add(item);
 	}
@@ -68,7 +68,7 @@ public abstract class Schedule
 	public void editAction(int actionNumber, Action newAction) throws ScheduleException
 	{
 		if(actionNumber < 0 || actionNumber >= actions.size())
-			throw new ScheduleException("La posición a modificar es inválida");
+			throw new ScheduleException("La posicin a modificar es invlida");
 		
 		actions.set(actionNumber, newAction);
 	}
@@ -76,7 +76,7 @@ public abstract class Schedule
 	public void removeAction(int index) throws ScheduleException
 	{
 		if(index < 0 || index >= actions.size())
-			throw new ScheduleException("La posición a remover es inválida");
+			throw new ScheduleException("La posicin a remover es invlida");
 		
 		actions.remove(index);
 	}
@@ -84,13 +84,13 @@ public abstract class Schedule
 	public void swapAction(int indexA, int indexB) throws ScheduleException
 	{
 		if(indexA < 0 || indexB < 0  || indexA >= actions.size() || indexB >= actions.size())
-			throw new ScheduleException("Las posiciones a swapear son inválidas");
+			throw new ScheduleException("Las posiciones a swapear son invlidas");
 		
 		Collections.swap(actions, indexA, indexB);
 	}
 	//[end]
 
-	//[start] Métodos Abstractos
+	//[start] Mtodos Abstractos
 	public abstract LegalResult analyzeLegality();
 	public abstract ScheduleGraph buildScheduleGraph();
 	//[end]
@@ -99,7 +99,7 @@ public abstract class Schedule
 	public SerialResult analyzeSeriality()
 	{
 		//TERMINADO: Completar
-		//Un schedule es serial si para toda transacción, todas sus acciones aparecen consecutivas dentro del schedule
+		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
 		String message = "";
@@ -142,7 +142,7 @@ public abstract class Schedule
 		//TODO: Completar Es Serializable por Martin Cammi
 		//Usar el grafo para determinar si es o no serializable
 		boolean isSerializable = true;
-		List<List<Action>> possibleExcecution = new ArrayList<List<Action>>();
+		List<List<String>> possibleExcecution = new ArrayList<List<String>>();
 		List<String> cycle = new ArrayList<String>();
 		String message = "";
 		isSerializable = !tieneCiclos( graph, cycle );
@@ -164,15 +164,15 @@ public abstract class Schedule
 	public RecoverabilityResult analyzeRecoverability()
 	{
 		//TODO: Completar Recuperabilidad - Todos
-		//La idea es que usen los métodos reads, writes & commits de cada acción para analizar recuperabilidad
+		//La idea es que usen los mtodos reads, writes & commits de cada accin para analizar recuperabilidad
 		//Recuperable si: 
-		//	Toda transacción T hace COMMIT después de que lo hayan hecho todas las transacciones que escribieron algo que T lee
+		//	Toda transaccin T hace COMMIT despus de que lo hayan hecho todas las transacciones que escribieron algo que T lee
 		//Evita aborts en cascada si:
-		//	Toda transacción lee de ítems escritos por transacciones que hicieron COMMIT
+		//	Toda transaccin lee de tems escritos por transacciones que hicieron COMMIT
 		//Escricto si:
-		//	Toda transacción lee y escribe ítems escritos por transacciones que hicieron COMMIT
+		//	Toda transaccin lee y escribe tems escritos por transacciones que hicieron COMMIT
 		
-		//OBS (importante): Tener en cuenta que en algunos modelos una misma acción puede leer y escribir al mismo tiempo 
+		//OBS (importante): Tener en cuenta que en algunos modelos una misma accin puede leer y escribir al mismo tiempo 
 		
 		return null;
 	}
