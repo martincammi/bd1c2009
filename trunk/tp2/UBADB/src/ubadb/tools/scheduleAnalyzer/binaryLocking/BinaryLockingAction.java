@@ -34,7 +34,7 @@ public class BinaryLockingAction extends Action
 	} 
 	//[end]
 
-	//[start] Métodos implementados
+	//[start] Mtodos implementados
 	@Override
 	public boolean commits()
 	{
@@ -65,15 +65,15 @@ public class BinaryLockingAction extends Action
 		
 		if(type == BinaryLockingActionType.LOCK)
 		{
-			ret = "L(" + item + ")";
+			ret += "L(" + item + ")";
 		}
 		else if(type == BinaryLockingActionType.UNLOCK)
 		{
-			ret = "U(" + item + ")";
+			ret += "U(" + item + ")";
 		}
 		else if(type == BinaryLockingActionType.COMMIT)
 		{
-			ret = "Commit";
+			ret += "Commit";
 		}
 		
 		return ret;
