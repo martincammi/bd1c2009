@@ -44,7 +44,7 @@ public class TernaryLockingAction extends Action
 	@Override
 	public boolean reads()
 	{
-		return type.equals(TernaryLockingActionType.RLOCK);
+		return ( type.equals(TernaryLockingActionType.RLOCK) || type.equals(TernaryLockingActionType.WLOCK) );
 	}
 
 	@Override
