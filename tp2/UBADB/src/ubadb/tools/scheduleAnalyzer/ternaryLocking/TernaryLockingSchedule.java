@@ -78,40 +78,42 @@ public class TernaryLockingSchedule extends Schedule
 		TernaryLockingAction action2;
 		String item2;
 		String T2;
-		if(action1.reads()){
+		if(isRlock(action1)){
 			for (int i = indexArc + 1; i < getActions().size(); i++){
 				action2 = (TernaryLockingAction) getActions().get(i);
 				item2 = action2.getItem();
 				T2 = action2.getTransaction();
 
-				//si ocurre un read del mismo elemento, sigo
-				if(action2.reads() && item1.equals(item2) && !T1.equals(T2)){
-					break;
-				}
 				// Si encuentro un write sobre el mismo item y de transacciones diferentes agrego un arco
-				if(action2.writes() && item1.equals(item2) && !T1.equals(T2)){
+				if(isWlock(action2) && item1.equals(item2) && !T1.equals(T2)){
 					ScheduleArc arc = new ScheduleArc(T1,T2,indexArc,i);
 					graph.addArc(arc);
-					break;
 				}
 				
 			}
-		}else if(action1.writes()){
+		}else if(isWlock(action1)){
 			for (int i = indexArc + 1; i < getActions().size(); i++){
 				action2 = (TernaryLockingAction) getActions().get(i);
 				T2 = action2.getTransaction();
 				item2 = action2.getItem();
 				
 				// Si encuentro un action sobre el mismo item y de transacciones diferentes agrego un arco.
-				if((action2.reads() || action2.writes()) && item1.equals(item2) && !T1.equals(T2)){
+				if((isRlock(action2) || isWlock(action2)) && item1.equals(item2) && !T1.equals(T2)){
 					ScheduleArc arc = new ScheduleArc(T1,T2,indexArc,i);
 					graph.addArc(arc);
-//					if(action2.writes()) //Si el action es un write termino de buscar
-					break;
 				}
 			}
 		}
 	}
+	
+	private boolean isRlock(TernaryLockingAction action){
+		return action.getType().equals(TernaryLockingActionType.RLOCK);
+	}
+
+	private boolean isWlock(TernaryLockingAction action){
+		return action.getType().equals(TernaryLockingActionType.WLOCK);
+	}
+	
 	
 	//[start] analyzeLegality
 	@Override
