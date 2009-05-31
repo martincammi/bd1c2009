@@ -1,5 +1,10 @@
 package ubadb.tools.scheduleAnalyzer.common;
 
+import java.awt.Frame;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,4 +53,14 @@ public class ScheduleGraph
 		return arcs;
 	}
 	//[end]
+	
+	public void mostrar() throws InterruptedException{
+		Frame f = new Frame("prueba");
+		
+		GrafoApplet applet = new GrafoApplet(this);
+		f.add("Center",applet);
+		f.pack();
+		f.show();
+		Thread.sleep(100000);
+	}
 }
