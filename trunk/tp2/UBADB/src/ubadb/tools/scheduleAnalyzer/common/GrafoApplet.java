@@ -11,6 +11,7 @@ import java.awt.Image;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
+import java.util.List;
 
 public class GrafoApplet extends Applet {
 
@@ -36,6 +37,14 @@ class DibujaGrafo extends Canvas {
 		paint(g);
 	}
 
+	private int getIndex(List<String> lista, String transaccion){
+		for (int i = 0; i < lista.size(); i++) {
+			if(transaccion.equals(lista.get(i)))
+				return i+1;
+		}
+		return 0;
+	}
+	
 	public void paint(Graphics g) {
 		Dimension d = preferredSize();
 		int diametroNodo = 10;
@@ -52,16 +61,14 @@ class DibujaGrafo extends Canvas {
 
 			g.setColor(Color.blue);
 			g.fillOval((int) coordX - radioNodo, (int) coordY - radioNodo, diametroNodo, diametroNodo);
-			g.drawString("T" + i, (int) coordX + 10, (int) coordY);
+			g.drawString(this.grafo.getTransactions().get(i-1), (int) coordX + 10, (int) coordY);
 		}
 
 		System.out.println("arcos="+this.grafo.getArcs().size());
 		for (int j = 0; j < this.grafo.getArcs().size(); j++) {
-				
-			String st1 = this.grafo.getArcs().get(j).getStartTransaction().substring(1);
-			String st2 = this.grafo.getArcs().get(j).getEndTransaction().substring(1);
-			int it1 = new Integer(st1).intValue();
-			int it2 = new Integer(st2).intValue();
+			
+			int it1 = this.getIndex(this.grafo.getTransactions(), this.grafo.getArcs().get(j).getStartTransaction());
+			int it2 = this.getIndex(this.grafo.getTransactions(), this.grafo.getArcs().get(j).getEndTransaction());
 				
 			int coordX1 = (int) (d.width / 2 + Math.sin(Math.toRadians((360 / total) * it1))* aumento);
 			int coordY1 = (int) (d.height / 2 + Math.cos(Math.toRadians((360 / total) * it1))* aumento);
