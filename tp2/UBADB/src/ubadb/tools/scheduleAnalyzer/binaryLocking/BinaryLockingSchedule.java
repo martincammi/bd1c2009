@@ -39,12 +39,11 @@ public class BinaryLockingSchedule extends Schedule
 	//[end]
 	
 	//[start] buildScheduleGraph
-	@Override
+/*	@Override
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TODO: Completar Armar Grafo binario - por Matias
 		//Se deben agregar arcos entre T1 -> T2 cuando:
-		//- T1 hace lock de un ítem A y T2 hace lock de A (mcammi: aca creo que debe ser T1 hace UNLOCK y T2 hace LOCK.)
+		//- T1 hace lock de un tem A y T2 hace lock de A (mcammi: aca creo que debe ser T1 hace UNLOCK y T2 hace LOCK.)
 		//OBS: No agregar arcos que se deducen por transitividad
 
 		List<Action> unlocks = new ArrayList<Action>();
@@ -65,6 +64,78 @@ public class BinaryLockingSchedule extends Schedule
 		return null;
 	}
 	//[end]
+*/
+	//[start] buildScheduleGraph
+	@Override
+	public ScheduleGraph buildScheduleGraph()
+	{
+		//TODO: TERMINADO Aunque me falta compilarlo :-P
+		//Completar Armar Grafo binario - por Matias
+		//Se deben agregar arcos entre T1 -> T2 cuando:
+		//- T1 hace lock de un tem A y T2 hace lock de A 
+		//(mcammi: aca creo que debe ser T1 hace UNLOCK y T2 hace LOCK.)
+		//(mperez: eso se ve en legalidad (Que si hace un UNLOCK antes hizo un LOCK))
+		//OBS: No agregar arcos que se deducen por transitividad
+	
+		ScheduleGraph graph = new ScheduleGraph();
+		
+		// Se agregan las transactions al grafo
+		for (Iterator iter = getTransactions().iterator(); iter.hasNext();){
+			graph.addTransaction((String)iter.next());
+		}
+		
+		//Se agregan las dependencias al grafo
+		for (int i = 0; i < getActions().size(); i++) {
+			addArcs(graph,i);
+		}
+				
+		return graph;
+	}
+	//[end]
+
+	private void addArcs(ScheduleGraph graph, int indexArc)
+	{
+		BinaryLockingAction action1 = (BinaryLockingAction) getActions().get(indexArc);
+		String item1 = action1.getItem();
+		String T1 = action1.getTransaction();
+
+		// Me fijo que sea un LOCK
+		if(action1.getType().equals(BinaryLockingActionType.LOCK))
+		{
+			BinaryLockingAction action2;
+			String item2;
+			String T2;
+			int n = getActions().size();
+			int i = indexArc + 1;
+			while( i < n )
+			{
+				action2 = (BinaryLockingAction) getActions().get(i);
+				item2 = action2.getItem();
+				T2 = action2.getTransaction();
+				// Si es la misma Transaccion me fijo si hace un Lock sobre el mismo elemento, en ese caso
+				// no pongo mÃ¡s arcos ya que los pongo despuÃ©s
+				// (Aunque por como estÃ¡ hecho el addArc lo podrÃ­a poner igual)
+				if(T1 == T2)
+				{
+					if(item1 == item2 && action2.getType().equals(BinaryLockingActionType.LOCK))
+						break;	
+				}
+				else //Son Transacciones distintas
+				{
+					// Pongo un arco sÃ³lo si la accion es un Lock sobre el mismo item
+					if (item1 == item2 && action2.getType().equals(BinaryLockingActionType.LOCK))
+					{
+						ScheduleArc arc = new ScheduleArc(T1,T2,indexArc,i);
+						graph.addArc(arc);
+						// Y paro de agregar arcos por la optimizacion que piden
+						break;
+					}
+				}
+				i++;
+			}
+		}
+		// Si NO soy un Lock no hago nada
+	}
 
 	//[start] analyzeLegality
 	@Override
@@ -72,11 +143,11 @@ public class BinaryLockingSchedule extends Schedule
 	{
 		//TODO: Completar Analizar la legabilidad binario - por Fabrizio
 		//Un schedule es legal cuando:
-		//- Cada transacción T posee como máximo un commit
+		//- Cada transaccin T posee como mximo un commit
 		//- Si T hace LOCK A, luego debe hacer UNLOCK A
 		//- Si T hace UNLOCK A, antes debe haber hecho LOCK A
 		//- Si T hace LOCK A, no puede volver a hacer LOCK A a menos que antes haya hecho UNLOCK A
-		//- Si T hace LOCK A, ninguna otra transacción T' puede hacer LOCK A hasta que T libere a A
+		//- Si T hace LOCK A, ninguna otra transaccin T' puede hacer LOCK A hasta que T libere a A
 		return null;
 	}
 	//[end]
