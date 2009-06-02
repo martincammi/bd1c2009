@@ -1,11 +1,10 @@
 package ubadb.tools.scheduleAnalyzer.binaryLocking;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import ubadb.tools.scheduleAnalyzer.common.Action;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
+import ubadb.tools.scheduleAnalyzer.common.ScheduleArc;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleGraph;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleType;
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
