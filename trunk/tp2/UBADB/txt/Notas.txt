@@ -1,10 +1,26 @@
-En ScheduleArch, interpretamos startIndex endIndex como los indices de las acciones que conflictuan dentro de la
-historia.
--en el armado del grafo nofiltramos las que se deduscan por transitividad
+
+
+Detalles de implementaciòn
+Colocamos en la clase superior de Scheduler
+
+Interpretaciones
+
+ScheduleArch
+1) Interpretamos startIndex y endIndex como los indices de las acciones que conflictuan dentro de la historia.
+2) En el armado del grafo no filtramos las dependencias que se deducen por transitividad. (Srs creo que esto
+no es del todo cierto ya que al armar el grafo en buildScheduleGraph de NonLockingSchedule por ejemplo, 
+al buscar dependencias de un WRITE y cortar en el caso de encontrar otro WRITE, estamos evitando las
+transitividades segun comprendo) si alguien puede afirmar si esto que digo es correcto seria bueno. Martin.
 
 
 
 Cambios
 
-1) Agregamos el metodo de igualdad en la clase ScheduleArc
-2) modificamos el add del ScheduleGraph para que si existe un arco entre dos transacciones no lo agregue
+ScheduleArc
+1) Se agrega el método equals para establecer la igualdad de arcos como: dos arcos son iguales cuando el startTransaction y el endTransaction
+coinciden.
+
+ScheduleGraph
+2) Se modifica el add del ScheduleGraph para que si existe un arco entre dos transacciones no lo agregue.
+3) Se agrega el método isDependence que toma una transacción e indica si hay algun arco que llegue a ella.
+4) Se agrega el método removeTransaction para remover un nodo.
