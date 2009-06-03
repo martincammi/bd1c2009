@@ -98,7 +98,7 @@ public abstract class Schedule
 	//[start] analyzeSeriality
 	public SerialResult analyzeSeriality()
 	{
-		//TERMINADO: Completar
+		//TERMINADO
 		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
@@ -136,30 +136,174 @@ public abstract class Schedule
 	
 	//[start] analyzeSerializability
 	public SerializabilityResult analyzeSerializability()
-	{
-		ScheduleGraph graph = buildScheduleGraph();
-		
+	{	
 		//TODO: Completar Es Serializable por Martin Cammi
 		//Usar el grafo para determinar si es o no serializable
 		boolean isSerializable = true;
+		ScheduleGraph graph = buildScheduleGraph();
 		List<List<String>> possibleExcecution = new ArrayList<List<String>>();
 		List<String> cycle = new ArrayList<String>();
 		String message = "";
-		isSerializable = !tieneCiclos( graph, cycle );
-		if (isSerializable)
+		isSerializable = !hasCycles(possibleExcecution, graph);
+		if (!isSerializable) //Se buscan los ciclos
 		{
-			//possibleExcecution = ;
+			getCycle(cycle, graph);
 		}
 		SerializabilityResult result = new SerializabilityResult(isSerializable, possibleExcecution, cycle, message );
 		return result;
 	}
 	//[end]
 
-	private boolean tieneCiclos(ScheduleGraph graph, List<String> cycle)
+	private boolean hasCycles(List<List<String>> possibleExcecutions, ScheduleGraph graph)
 	{
-		return true;
+		//Inicialización
+		List<String> oneExecution = new ArrayList<String>();
+		List<Par<String,Boolean>> nodos = new ArrayList<Par<String,Boolean>>(); //Lista de nodos (nombreTnx,habilitada);
+		
+		//Carga inicial de tnxs, todas habilitadas.
+		for (String nodo : graph.getTransactions()) 
+		{
+			nodos.add(new Par<String,Boolean>(nodo,true));
+		}
+		
+		//Busca ejecuciones
+		findExecutions(possibleExcecutions, nodos, oneExecution, graph);
+	
+		//Si possibleExcecutions es vacio significa que no se pudo hallar una ejecucion con lo cual no es serializable por lo tanto tiene un ciclo.
+		return possibleExcecutions.size() == 0; 
+	}
+		
+	/*
+	 * Obtiene las posibles ejecuciones serializables si las hay.
+	 */
+	private void findExecutions(List<List<String>> possibleExcecutions, List<Par<String,Boolean>> nodos, List<String> oneExecution, ScheduleGraph graph){
+		
+		if(isEmpty(nodos)){
+			
+			List<String> nuevaExec = new ArrayList<String>();
+			for (Iterator iter = oneExecution.iterator(); iter.hasNext();) 
+			{
+				String element = (String) iter.next();
+				nuevaExec.add(element);
+			}
+			possibleExcecutions.add(nuevaExec);
+		}
+		
+		
+		//for (Iterator iter = nodos.iterator(); iter.hasNext();) {
+		for (int i = 0; i < nodos.size(); i++)
+		{
+			String tnx = (String) nodos.get(i).getFirst();
+			
+			if(nodos.get(i).getSecond())
+			{
+				if(!graph.isDependenceWithoutNodes(tnx, oneExecution))
+				{
+					nodos.get(i).setSecond(false);
+					oneExecution.add(tnx);
+					findExecutions(possibleExcecutions,nodos,oneExecution,graph);
+					nodos.get(i).setSecond(true);
+					oneExecution.remove(tnx);
+				}
+			}
+		}
 	}
 	
+	private void getCycle(List<String> cycle, ScheduleGraph graph)
+	{
+		//Inicialización
+		List<Par<String,Boolean>> nodos = new ArrayList<Par<String,Boolean>>(); //Lista de nodos (nombreTnx,habilitada);
+		boolean shutdownAlgorithm = false;
+		
+		//Carga inicial de tnxs, todas habilitadas.
+		for (String nodo : graph.getTransactions()) 
+		{
+			nodos.add(new Par<String,Boolean>(nodo,true));
+		}
+		
+		//Busca el ciclo.
+		findCycle(cycle, nodos, graph, shutdownAlgorithm);
+	}
+	
+	
+	private void findCycle(List<String> cycle, List<Par<String,Boolean>> nodos, ScheduleGraph graph, boolean shutdownAlgorithm){
+		
+		if(!isEmpty(nodos) && !shutdownAlgorithm){
+			for (int i = 0; i < nodos.size(); i++)
+			{
+				String tnx = (String) nodos.get(i).getFirst();
+				
+				if(nodos.get(i).getSecond())
+				{
+					//Si es una dependencia de otro es posible que forme parte de un ciclo.
+					if(graph.isDependence(tnx))
+					{
+						if(cycle.contains(tnx)){ //El nodo ya estaba contenido, se formo un ciclo
+							shutdownAlgorithm = true;
+						}
+						cycle.add(tnx);
+						List<Par<String,Boolean>> nodos2 = copyNodosTrue(nodos);
+						
+						nodos2.get(i).setSecond(false);
+						findCycle(cycle,nodos2,graph,shutdownAlgorithm);
+						nodos.get(i).setSecond(true);
+					}
+				}
+			}
+		}
+	}
+	
+	private List<Par<String,Boolean>> copyNodosTrue(List<Par<String,Boolean>> nodos){
+		List<Par<String,Boolean>> nodosNuevos = new ArrayList<Par<String,Boolean>>();
+		for (Par<String, Boolean> par : nodos) {
+			par.setSecond(true);
+			nodosNuevos.add(par);
+		}
+		return nodosNuevos;
+	}
+	
+	private boolean isEmpty(List<Par<String,Boolean>> lista){
+		boolean tieneAlgo = false;
+		for (Par<String, Boolean> par : lista) {
+			tieneAlgo = tieneAlgo || par.getSecond();
+		}
+		return !tieneAlgo;
+	}
+	
+	/*
+	private boolean tieneCiclosA(List<List<String>> possibleExcecutions, List<String> cycle)
+	{
+		ScheduleGraph graph = buildScheduleGraph();
+		List<String> nodos = graph.getTransactions();
+		List<String> oneExec = new ArrayList<String>();
+		Iterator iter = nodos.iterator();
+		
+		for (; iter.hasNext();) {
+			String tnx = (String) iter.next();
+			if(!graph.isDependence(tnx)){
+				nodos.remove(tnx);
+				iter = nodos.iterator();
+				oneExec.add(tnx);
+				graph.removeTransaction(tnx);
+			}
+		}
+		if(nodos.size() == 0){
+			possibleExcecutions.add(oneExec);
+		}
+		
+		return nodos.size() > 0; //Si quedó algun nodo en la lista significa que algunos de ellos o todos forman un ciclo
+	}*/
+	
+	/** Muestra el grafo, solo para Debug */
+	public void showGraph(){
+		//System.out.println(buildScheduleGraph().toString());
+		try {
+			buildScheduleGraph().mostrar();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{

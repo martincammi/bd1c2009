@@ -37,4 +37,11 @@ public class SerializabilityResult
 	{
 		return message;
 	}
+	
+	public String toString(){
+		return "isSerializable : " + isSerializable + "\n" +
+			   "possibleEx: " + possibleExecutions.toString() + "\n" +
+			   "cycle: " + cycle.toString() + "\n" +
+			   "message: " + message; 
+		}
 }
