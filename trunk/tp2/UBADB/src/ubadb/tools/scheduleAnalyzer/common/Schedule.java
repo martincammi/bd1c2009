@@ -44,6 +44,30 @@ public abstract class Schedule
 	}
 	//[end]
 	
+	private class Par<F,S> {
+		
+		private F first;
+		private S second;
+		
+		public Par(F first, S second){
+			this.first = first;
+			this.second = second;
+		}
+		
+		public F getFirst() {
+			return first;
+		}
+		public void setFirst(F first) {
+			this.first = first;
+		}
+		public S getSecond() {
+			return second;
+		}
+		public void setSecond(S second) {
+			this.second = second;
+		}
+	}
+	
 	//[start] addTransaction
 	public void addTransaction(String transaction) throws ScheduleException
 	{
