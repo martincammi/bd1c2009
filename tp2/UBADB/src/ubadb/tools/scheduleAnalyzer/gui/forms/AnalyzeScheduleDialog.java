@@ -166,7 +166,7 @@ public class AnalyzeScheduleDialog extends JDialog
 					result.getTransaction1() + " y " + result.getTransaction2());
 		}
 		
-		lblSerialMessage.setText(result.getMessage());
+		lblRecuperabilidadMensaje.setText(result.getMessage());
 	}
 
 	
