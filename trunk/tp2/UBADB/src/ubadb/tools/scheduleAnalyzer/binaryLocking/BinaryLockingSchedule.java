@@ -68,7 +68,6 @@ public class BinaryLockingSchedule extends Schedule
 	@Override
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TODO: TERMINADO Aunque me falta compilarlo :-P
 		//Completar Armar Grafo binario - por Matias
 		//Se deben agregar arcos entre T1 -> T2 cuando:
 		//- T1 hace lock de un tem A y T2 hace lock de A 
