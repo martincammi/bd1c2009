@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityResult;
+import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityType;
 import ubadb.tools.scheduleAnalyzer.common.results.SerialResult;
 import ubadb.tools.scheduleAnalyzer.common.results.SerializabilityResult;
 import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
+
 
 
 public abstract class Schedule
@@ -342,7 +349,128 @@ public abstract class Schedule
 		
 		//OBS (importante): Tener en cuenta que en algunos modelos una misma accin puede leer y escribir al mismo tiempo 
 		
-		return null;
+		Dictionary<String, Set<String> > escritoPor = new Hashtable(); // item - transaccion
+		Dictionary<String, Set<String> > leeDe = new Hashtable(); // transacion - lista de transacciones
+		Set<String> comiteadas = new TreeSet<String>();
+
+		boolean estricto = true;
+		boolean aca = true;
+		boolean recuperable = true;
+		
+		RecoverabilityResult res = new RecoverabilityResult(RecoverabilityType.STRICT,null,null,"La historia es Estricta" );
+		
+		for (Iterator iterator = actions.iterator(); iterator.hasNext();)
+		{
+			Action act = (Action) iterator.next();
+			/* Action tiene:
+			 * public boolean reads();
+			 * public boolean writes();
+			 * public boolean commits();
+			 * public String getTransaction();
+			 * public String getItem();
+			 */
+			String item = act.getItem();
+			String transaction = act.getTransaction();
+			
+			if (act.reads())
+			{
+				// Si leo un item que alguien escribió
+				if (escritoPor.get(item) != null) 
+				{
+					boolean tjsComiteadas = comiteadas.containsAll(escritoPor.get(item));
+					
+					if (aca)
+					{
+						// Me fijo que cumpla con ACA
+						// transaction lee el item de escritoPor.get(item) 
+						aca = aca && tjsComiteadas;
+						if ( !aca)
+						{
+							escritoPor.get(item).removeAll(comiteadas);
+							String t1 = (String) escritoPor.get(item).iterator().next();
+							String t2 = transaction;
+							RecoverabilityType type = RecoverabilityType.RECOVERABLE;
+							
+							res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de la 1 antes de que la misma realize un commit" ) ;
+						}
+						// Lo pongo adentro del if porque si no es ACA ni vale la pena ver si es estricto
+						// Esto es para consistencia, porque
+						// el caso del read rompe Estricto sii rompe ACA
+						estricto = estricto && tjsComiteadas;	
+						
+					}
+			
+					// Lo agrego al diccionario de leeDe
+					
+					// Defino la entrada en el dic si no estaba
+					if ( leeDe.get(transaction) == null )
+					{ 
+						Set<String> transacs = new TreeSet<String>();
+						leeDe.put(transaction, transacs);
+					}
+					// Agrego a la transaccion que escribió el item a la
+					// lista de la transacciones que leyeron el item
+					leeDe.get(transaction).addAll(escritoPor.get(item));
+					
+				}
+				// Si leo un dato que nadie escribió no pasa nada
+
+			}
+			//Tengo que hacer primero el reads porque si es un lock, se toma como que escribe 
+			// y lee, y si primero hago la escritura piso el que escibió antes y no sé de quien leo
+			if (act.writes())
+			{
+				//Me fijo que no rompa con Estricto (Si escribo un item ya escrito por Tj => Tj ya commiteo)
+				if (estricto && escritoPor.get(item) != null) 
+				{
+					// transaction escribe el item previamente escrito por escritoPor.get(item) 
+					// Si escritoPor.get(item) no hizo commit, entonces no cumple Estricto
+					boolean tjsComiteadas = comiteadas.containsAll( escritoPor.get(item) );
+					estricto = estricto && tjsComiteadas;
+					
+					if (!estricto)
+					{
+						escritoPor.get(item).removeAll(comiteadas);
+						String t1 = (String) escritoPor.get(item).iterator().next();
+						String t2 = transaction;
+						RecoverabilityType type = RecoverabilityType.AVOIDS_CASCADING_ABORTS;
+						
+						res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 escribe el item previamente escrito por 1 antes de que la misma realize un commit" );
+					}					
+				}
+				
+				// Lo agrego al diccionario escritoPor
+				
+				if ( escritoPor.get(item) == null )
+				{ 
+					Set<String> transacs = new TreeSet<String>();
+					escritoPor.put(item, transacs);
+				}
+				// Agrego a la transaccion que escribió el item a escritoPor
+				escritoPor.get(item).add(transaction);
+			}
+			if (act.commits())
+			{
+				// Me fijo que no rompa con Recuperabilidad
+				// Todas de las que leo están commiteadas
+				boolean tjsComiteadas = comiteadas.containsAll(leeDe.get(transaction));
+				recuperable = recuperable && tjsComiteadas;
+				
+				if (!recuperable)
+				{
+					leeDe.get(transaction).removeAll(comiteadas);
+					String t1 = (String) leeDe.get(transaction).iterator().next();
+					String t2 = transaction;
+					RecoverabilityType type = RecoverabilityType.NON_RECOVERABLE;
+					
+					res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de 1 y hace commit antes de 1" );
+					break;
+				}	
+			}
+			
+		}
+		
+		return res;
 	}
 	//[end]
 }
