@@ -43,5 +43,5 @@ public class SerializabilityResult
 			   "possibleEx: " + possibleExecutions.toString() + "\n" +
 			   "cycle: " + cycle.toString() + "\n" +
 			   "message: " + message; 
-		}
+	}
 }
