@@ -387,7 +387,7 @@ public abstract class Schedule
 		boolean aca = true;
 		boolean recuperable = true;
 		
-		RecoverabilityResult res = new RecoverabilityResult(RecoverabilityType.STRICT,"","","La historia es Estricta" );
+		RecoverabilityResult res = new RecoverabilityResult(RecoverabilityType.STRICT,null,null,"La historia es Estricta" );
 		
 		for (Iterator iterator = actions.iterator(); iterator.hasNext();)
 		{
