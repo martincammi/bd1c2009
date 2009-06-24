@@ -129,7 +129,7 @@ public abstract class Schedule
 	//[start] analyzeSeriality
 	public SerialResult analyzeSeriality()
 	{
-		//TODO: Casos de Test con BinaryLocking y TernaryLocking Martín Cammi
+		//TODO: Casos de Test con BinaryLocking y TernaryLocking Martï¿½n Cammi
 		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
@@ -203,7 +203,7 @@ public abstract class Schedule
 	 */
 	private boolean hasCycles(List<List<String>> possibleExcecutions, ScheduleGraph graph)
 	{
-		//Inicialización
+		//Inicializaciï¿½n
 		List<String> oneExecution = new ArrayList<String>();
 		List<Par<String,Boolean>> nodos = new ArrayList<Par<String,Boolean>>(); //Lista de nodos (nombreTnx,habilitada);
 		
@@ -225,7 +225,7 @@ public abstract class Schedule
 	 * Obtiene las posibles ejecuciones serializables si las hay. (recursivamente)
 	 * @param possibleExcecutions lista de salida de posibles ejecuciones.
 	 * @param nodos lista de transacciones que se van iterando.
-	 * @param oneExecution mantiene la ejecución parcial que se va obteniendo.
+	 * @param oneExecution mantiene la ejecuciï¿½n parcial que se va obteniendo.
 	 * @param grafo de precedencia
 	 */
 	private void findExecutions(List<List<String>> possibleExcecutions, List<Par<String,Boolean>> nodos, List<String> oneExecution, ScheduleGraph graph){
@@ -264,13 +264,13 @@ public abstract class Schedule
 	/**
 	 * @author martin.cammi
 	 * Devuelve los ciclos de un grafo.
-	 * Precondición: el grafo no debe ser serializable.
+	 * Precondiciï¿½n: el grafo no debe ser serializable.
 	 * @param cycle lista para devolver el ciclo encontrado.
 	 * @param graph grafo de precedencia de donde obtiene el ciclo.
 	 */
 	private void getCycle(List<String> cycle, ScheduleGraph graph)
 	{
-		//Inicialización
+		//Inicializaciï¿½n
 		List<Par<String,Boolean>> nodos = new ArrayList<Par<String,Boolean>>(); //Lista de nodos (nombreTnx,habilitada);
 		boolean shutdownAlgorithm = false;
 		
@@ -287,13 +287,13 @@ public abstract class Schedule
 	
 	private void findCycle(List<String> cycle, List<Par<String,Boolean>> nodos, ScheduleGraph graph, boolean shutdownAlgorithm){
 		
-		//Todos los nodos están deshabilitados y no se pide shutdown.
+		//Todos los nodos estï¿½n deshabilitados y no se pide shutdown.
 		if(!isEmpty(nodos) && !shutdownAlgorithm){
 			for (int i = 0; i < nodos.size(); i++)
 			{
 				String tnx = (String) nodos.get(i).getFirst();
 				
-				//Si la tnx está habilitada.
+				//Si la tnx estï¿½ habilitada.
 				if(nodos.get(i).getSecond())
 				{
 					//Si es una dependencia de otro es posible que forme parte de un ciclo.
@@ -329,7 +329,7 @@ public abstract class Schedule
 		for (Par<String, Boolean> par : lista) {
 			algunoEsTrue = algunoEsTrue || par.getSecond();
 		}
-		return !algunoEsTrue; //Si ninguno es true -> está vacia.
+		return !algunoEsTrue; //Si ninguno es true -> estï¿½ vacia.
 	}
 	
 	/*
@@ -353,7 +353,7 @@ public abstract class Schedule
 			possibleExcecutions.add(oneExec);
 		}
 		
-		return nodos.size() > 0; //Si quedó algun nodo en la lista significa que algunos de ellos o todos forman un ciclo
+		return nodos.size() > 0; //Si quedï¿½ algun nodo en la lista significa que algunos de ellos o todos forman un ciclo
 	}*/
 	
 	/** Muestra el grafo, solo para Debug */
@@ -387,7 +387,7 @@ public abstract class Schedule
 		boolean aca = true;
 		boolean recuperable = true;
 		
-		RecoverabilityResult res = new RecoverabilityResult(RecoverabilityType.STRICT,null,null,"La historia es Estricta" );
+		RecoverabilityResult res = new RecoverabilityResult(RecoverabilityType.STRICT,"","","La historia es Estricta" );
 		
 		for (Iterator iterator = actions.iterator(); iterator.hasNext();)
 		{
@@ -421,7 +421,7 @@ public abstract class Schedule
 							String t2 = transaction;
 							RecoverabilityType type = RecoverabilityType.RECOVERABLE;
 							
-							res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de la 1 antes de que la misma realize un commit" ) ;
+							res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de un item de 1 antes de que la misma realize un commit" ) ;
 						}
 						// Lo pongo adentro del if porque si no es ACA ni vale la pena ver si es estricto
 						// Esto es para consistencia, porque
@@ -451,7 +451,7 @@ public abstract class Schedule
 			if (act.writes())
 			{
 				//Me fijo que no rompa con Estricto (Si escribo un item ya escrito por Tj => Tj ya commiteo)
-				if (estricto && escritoPor.get(item) != null) 
+				if (estricto && (escritoPor.get(item) != null) ) 
 				{
 					// transaction escribe el item previamente escrito por escritoPor.get(item) 
 					// Si escritoPor.get(item) no hizo commit, entonces no cumple Estricto
@@ -483,7 +483,10 @@ public abstract class Schedule
 			{
 				// Me fijo que no rompa con Recuperabilidad
 				// Todas de las que leo estÃ¡n commiteadas
-				boolean tjsComiteadas = comiteadas.containsAll(leeDe.get(transaction));
+				boolean tjsComiteadas = true;
+				if (leeDe.get(transaction) != null) //Si no lee de nadie lo dejo true
+					tjsComiteadas = comiteadas.containsAll(leeDe.get(transaction));
+										
 				recuperable = recuperable && tjsComiteadas;
 				
 				if (!recuperable)
@@ -493,9 +496,11 @@ public abstract class Schedule
 					String t2 = transaction;
 					RecoverabilityType type = RecoverabilityType.NON_RECOVERABLE;
 					
-					res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de 1 y hace commit antes de 1" );
+					res = new RecoverabilityResult(type, t1, t2, "La transaccion "+t2+" lee de "+t1+" y hace commit antes." );
 					break;
-				}	
+				}
+				// Y agrego la transaccion a la lista de comiteadas.
+				comiteadas.add(transaction);
 			}
 			
 		}

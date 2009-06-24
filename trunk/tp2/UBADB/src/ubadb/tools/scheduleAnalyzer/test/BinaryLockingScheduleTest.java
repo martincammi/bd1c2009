@@ -3,8 +3,6 @@ package ubadb.tools.scheduleAnalyzer.test;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import ubadb.tools.scheduleAnalyzer.common.ScheduleGraph;
-import ubadb.tools.scheduleAnalyzer.common.results.SerializabilityResult;
-import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
 import ubadb.tools.scheduleAnalyzer.binaryLocking.BinaryLockingAction;
 import ubadb.tools.scheduleAnalyzer.binaryLocking.BinaryLockingActionType;
