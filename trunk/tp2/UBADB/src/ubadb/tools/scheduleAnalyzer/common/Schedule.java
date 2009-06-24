@@ -129,7 +129,7 @@ public abstract class Schedule
 	//[start] analyzeSeriality
 	public SerialResult analyzeSeriality()
 	{
-		//TERMINADO
+		//TODO: Casos de Test con BinaryLocking y TernaryLocking Martín Cammi
 		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
@@ -368,7 +368,7 @@ public abstract class Schedule
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{
-		//TODO: Completar Recuperabilidad - Todos
+		//TODO: Falta Testing - Recuperabilidad - Todos
 		//La idea es que usen los mtodos reads, writes & commits de cada accin para analizar recuperabilidad
 		//Recuperable si: 
 		//	Toda transaccin T hace COMMIT despus de que lo hayan hecho todas las transacciones que escribieron algo que T lee
