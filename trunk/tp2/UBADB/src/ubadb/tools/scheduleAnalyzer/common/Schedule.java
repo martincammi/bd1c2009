@@ -368,7 +368,7 @@ public abstract class Schedule
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{
-		//TODO: Casos de Testing fallan - Recuperabilidad - Todos
+		//TODO: Casos de Testing faltan - Recuperabilidad - Pasa 3 que hay
 		//La idea es que usen los mtodos reads, writes & commits de cada accin para analizar recuperabilidad
 		//Recuperable si: 
 		//	Toda transaccin T hace COMMIT despus de que lo hayan hecho todas las transacciones que escribieron algo que T lee
@@ -421,7 +421,7 @@ public abstract class Schedule
 							String t2 = transaction;
 							RecoverabilityType type = RecoverabilityType.RECOVERABLE;
 							
-							res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 lee de un item de 1 antes de que la misma realize un commit" ) ;
+							res = new RecoverabilityResult(type, t1, t2, "La transaccion "+t2+" lee el item "+item+" de "+t1+" antes de que "+t1+" realize un commit" ) ;
 						}
 						// Lo pongo adentro del if porque si no es ACA ni vale la pena ver si es estricto
 						// Esto es para consistencia, porque
@@ -465,7 +465,7 @@ public abstract class Schedule
 						String t2 = transaction;
 						RecoverabilityType type = RecoverabilityType.AVOIDS_CASCADING_ABORTS;
 						
-						res = new RecoverabilityResult(type, t1, t2, "La transaccion 2 escribe el item previamente escrito por 1 antes de que la misma realize un commit" );
+						res = new RecoverabilityResult(type, t1, t2, "La transaccion "+t2+" escribe el item "+item+" previamente escrito por "+t1+" antes de que la misma realize un commit" );
 					}					
 				}
 				
