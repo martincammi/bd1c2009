@@ -34,4 +34,10 @@ public class RecoverabilityResult
 	{
 		return message;
 	}
+	
+	public String toString(){
+		return "Type : " + type + "\n" +
+			   "conflict Tnxs: " + transaction1 + "," + transaction2 + "\n" +
+			   "message: " + message; 
+	}
 }
