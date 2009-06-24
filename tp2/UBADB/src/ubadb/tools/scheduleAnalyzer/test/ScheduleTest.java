@@ -1,5 +1,7 @@
 package ubadb.tools.scheduleAnalyzer.test;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
 import ubadb.tools.scheduleAnalyzer.common.results.SerialResult;
 import ubadb.tools.scheduleAnalyzer.common.results.SerializabilityResult;
@@ -8,22 +10,19 @@ import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingAction;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingActionType;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingSchedule;
 
-public class ScheduleTest 
+public class ScheduleTest extends TestCase
 {
-	
-	public static void main(String[] args) {
-		testAll();
-	}
-	
-	public static void testAll()
+	/*//Reeemplazado por el TestSuit
+	public void testAll()
 	{
-		//testIsSerial();
-		//testIsSerializable();
-		testIsNotSerializable();
-	}	
+		isSerial();
+		isSerializable();
+		isNotSerializable1();
+	}*/	
 	
-	public static void testIsSerial()
+	public void testIsSerial()
 	{
+		System.out.println("----Test Serial-----");
 		NonLockingSchedule sch = new NonLockingSchedule();
 		try 
 		{
@@ -56,7 +55,6 @@ public class ScheduleTest
 		} 
 		catch (ScheduleException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		SerialResult result = sch.analyzeSeriality();
@@ -64,8 +62,8 @@ public class ScheduleTest
 		System.out.println(result.getNonSerialTransaction());
 	}
 
-	public static void atestIsSerializable(){
-		
+	public void testIsSerializable(){
+		System.out.println("----Test is Serializable-----");
 		Schedule sch = new NonLockingSchedule();
 		
 		
@@ -93,19 +91,18 @@ public class ScheduleTest
 		} 
 		catch (ScheduleException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		//sch.showGraph();
 		SerializabilityResult sr = sch.analyzeSerializability();
-		System.out.println(sr.toString()); 
+		System.out.println(sr.toString());
+		assertTrue(sr.isSerializable());
 	}
 	
-	public static void testIsNotSerializable(){
-		
+	public void testIsNotSerializable1(){
+		System.out.println("----Test is not Serializable 1-----");
 		Schedule sch = new NonLockingSchedule();
-		
 		
 		try 
 		{
@@ -122,12 +119,52 @@ public class ScheduleTest
 		} 
 		catch (ScheduleException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		//sch.showGraph();
 		SerializabilityResult sr = sch.analyzeSerializability();
-		System.out.println(sr.toString()); 
+		System.out.println(sr.toString());
+		assertTrue(!sr.isSerializable());
+	}
+	
+	public void testIsNotSerializable2(){
+		System.out.println("----Test is not Serializable 2-----");
+		Schedule sch = new NonLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 5;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 4;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","C"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","C"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","C"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","D"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","D"));
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		sch.showGraph();
+		SerializabilityResult sr = sch.analyzeSerializability();
+		System.out.println(sr.toString());
+		assertTrue(!sr.isSerializable());
 	}
 }
