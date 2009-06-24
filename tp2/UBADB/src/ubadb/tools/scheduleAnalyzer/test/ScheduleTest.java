@@ -239,4 +239,43 @@ public class ScheduleTest extends TestCase
 		System.out.println(rr.toString());
 		assertTrue(rr.getType().equals(RecoverabilityType.STRICT));
 	}
+	public void testAnalyzeRecoverabilityRC3(){
+		System.out.println("----Test analyzeRecoverability RC3-----");
+		Schedule sch = new NonLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 4;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 2; // items A y B
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A")); //NO CUMPLE ACA
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","B"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B")); //NO CUMPLE ESTRICTO, PERO YA ROMPIA ACA
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		RecoverabilityResult rr = sch.analyzeRecoverability();
+		System.out.println(rr.toString());
+		assertTrue(rr.getType().equals(RecoverabilityType.RECOVERABLE));
+	}
+	
 }
