@@ -368,7 +368,7 @@ public abstract class Schedule
 	//[start] analyzeRecoverability
 	public RecoverabilityResult analyzeRecoverability()
 	{
-		//TODO: Falta Testing - Recuperabilidad - Todos
+		//TODO: Casos de Testing fallan - Recuperabilidad - Todos
 		//La idea es que usen los mtodos reads, writes & commits de cada accin para analizar recuperabilidad
 		//Recuperable si: 
 		//	Toda transaccin T hace COMMIT despus de que lo hayan hecho todas las transacciones que escribieron algo que T lee
