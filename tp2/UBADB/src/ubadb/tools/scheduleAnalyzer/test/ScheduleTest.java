@@ -169,7 +169,7 @@ public class ScheduleTest extends TestCase
 		assertTrue(!sr.isSerializable());
 	}
 	
-	public void atestAnalyzeRecoverabilityRC(){
+	public void testAnalyzeRecoverabilityRC(){
 		System.out.println("----Test analyzeRecoverability RC-----");
 		Schedule sch = new NonLockingSchedule();
 		
@@ -237,6 +237,6 @@ public class ScheduleTest extends TestCase
 		//sch.showGraph();
 		RecoverabilityResult rr = sch.analyzeRecoverability();
 		System.out.println(rr.toString());
-		assertTrue(rr.getType().equals(RecoverabilityType.RECOVERABLE));
+		assertTrue(rr.getType().equals(RecoverabilityType.STRICT));
 	}
 }
