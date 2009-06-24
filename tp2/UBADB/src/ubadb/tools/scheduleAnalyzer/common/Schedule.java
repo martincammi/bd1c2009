@@ -123,6 +123,39 @@ public abstract class Schedule
 
 	//[start] Mtodos Abstractos
 	public abstract LegalResult analyzeLegality();
+
+	public LegalResult aLoSumoUnCommit_y_esUltimo()
+	{
+		//- Cada transacción T posee como máximo un commit
+		//- Si T tiene COMMIT, éste es el último paso de la transacción.
+		Collection transaccionesValidas = new HashSet();
+		List<Action> actions = getActions();
+		for (int indexAction = 0; indexAction < actions.size(); indexAction++) {
+			Action action = actions.get(indexAction);
+			if(action.commits())
+			{
+				//Controla que no haya mas de un commit
+				if(transaccionesValidas.contains(action.getTransaction()))
+				{
+					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por poseer dos commits.");
+				}
+				//Controla que luego de un commit no haya otra operacion para la misma transaccion.
+				else if (tieneOtraOperacion(indexAction + 1, action.getTransaction()))
+				{
+					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por hacer un lock o unlock luego de haber realizado un commit.");
+				}
+				else
+				{
+					transaccionesValidas.add(action.getTransaction());
+				}
+			}
+			
+		}
+		
+		return new LegalResult(true, "", "La historia es legal.");
+	}
+	
+	
 	public abstract ScheduleGraph buildScheduleGraph();
 	//[end]
 
