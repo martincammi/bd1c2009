@@ -112,19 +112,7 @@ public class NonLockingSchedule extends Schedule
 	public LegalResult analyzeLegality()
 	{
 		//TERMINADO: Completar
-		Collection transaccionesValidas = new HashSet();
-		Iterator iterActions  = getActions().iterator();
-		while(iterActions.hasNext()){
-			Action action = ((Action) iterActions.next());
-			if(action.commits()){
-				if(transaccionesValidas.contains(action.getTransaction())){
-					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal.");
-				}else{
-					transaccionesValidas.add(action.getTransaction());
-				}
-			}
-		}
-		return new LegalResult(true, "", "La historia es legal.");
+		return aLoSumoUnCommit_y_esUltimo();
 	}
 	//[end]
 }
