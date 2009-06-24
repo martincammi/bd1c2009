@@ -166,25 +166,41 @@ public abstract class Schedule
 	//[end]
 	
 	//[start] analyzeSerializability
+	/**
+	 * @author martin.cammi
+	 * Analiza la seriabilidad del Grafo de precedencia.
+	 * @return Devuelve un objeto SerializabilityResult que indica si:
+	 *  - es Serializable
+	 *  - si lo es -> muestra las posibles ejecuciones
+	 *  - si no lo es -> muestra un ciclo
+	 *  - muestra un mensaje.
+	 */
 	public SerializabilityResult analyzeSerializability()
 	{	
-		//TODO: Completar Es Serializable por Martin Cammi
+		//TERMINADO: Completar Es Serializable por Martin Cammi
 		//Usar el grafo para determinar si es o no serializable
 		boolean isSerializable = true;
 		ScheduleGraph graph = buildScheduleGraph();
 		List<List<String>> possibleExcecution = new ArrayList<List<String>>();
 		List<String> cycle = new ArrayList<String>();
-		String message = "";
+		String message = "La historia es serializable.";
 		isSerializable = !hasCycles(possibleExcecution, graph);
 		if (!isSerializable) //Se buscan los ciclos
 		{
 			getCycle(cycle, graph);
+			message = "La historia no es serializable.";
 		}
 		SerializabilityResult result = new SerializabilityResult(isSerializable, possibleExcecution, cycle, message );
 		return result;
 	}
 	//[end]
 
+	/**
+	 * @author martin.cammi
+	 * Indica si el grafo tiene ciclos.
+	 * @param possibleExcecutions lista de salida de posibles ejecuciones.
+	 * @param grafo de precedencia
+	 */
 	private boolean hasCycles(List<List<String>> possibleExcecutions, ScheduleGraph graph)
 	{
 		//Inicialización
@@ -204,8 +220,13 @@ public abstract class Schedule
 		return possibleExcecutions.size() == 0; 
 	}
 		
-	/*
-	 * Obtiene las posibles ejecuciones serializables si las hay.
+	/**
+	 * @author martin.cammi
+	 * Obtiene las posibles ejecuciones serializables si las hay. (recursivamente)
+	 * @param possibleExcecutions lista de salida de posibles ejecuciones.
+	 * @param nodos lista de transacciones que se van iterando.
+	 * @param oneExecution mantiene la ejecución parcial que se va obteniendo.
+	 * @param grafo de precedencia
 	 */
 	private void findExecutions(List<List<String>> possibleExcecutions, List<Par<String,Boolean>> nodos, List<String> oneExecution, ScheduleGraph graph){
 		
@@ -240,6 +261,13 @@ public abstract class Schedule
 		}
 	}
 	
+	/**
+	 * @author martin.cammi
+	 * Devuelve los ciclos de un grafo.
+	 * Precondición: el grafo no debe ser serializable.
+	 * @param cycle lista para devolver el ciclo encontrado.
+	 * @param graph grafo de precedencia de donde obtiene el ciclo.
+	 */
 	private void getCycle(List<String> cycle, ScheduleGraph graph)
 	{
 		//Inicialización
@@ -259,11 +287,13 @@ public abstract class Schedule
 	
 	private void findCycle(List<String> cycle, List<Par<String,Boolean>> nodos, ScheduleGraph graph, boolean shutdownAlgorithm){
 		
+		//Todos los nodos están deshabilitados y no se pide shutdown.
 		if(!isEmpty(nodos) && !shutdownAlgorithm){
 			for (int i = 0; i < nodos.size(); i++)
 			{
 				String tnx = (String) nodos.get(i).getFirst();
 				
+				//Si la tnx está habilitada.
 				if(nodos.get(i).getSecond())
 				{
 					//Si es una dependencia de otro es posible que forme parte de un ciclo.
@@ -271,13 +301,14 @@ public abstract class Schedule
 					{
 						if(cycle.contains(tnx)){ //El nodo ya estaba contenido, se formo un ciclo
 							shutdownAlgorithm = true;
+						}else{
+							cycle.add(tnx);
+							List<Par<String,Boolean>> nodos2 = copyNodosTrue(nodos);
+							
+							nodos2.get(i).setSecond(false);
+							findCycle(cycle,nodos2,graph,shutdownAlgorithm);
+							nodos.get(i).setSecond(true);
 						}
-						cycle.add(tnx);
-						List<Par<String,Boolean>> nodos2 = copyNodosTrue(nodos);
-						
-						nodos2.get(i).setSecond(false);
-						findCycle(cycle,nodos2,graph,shutdownAlgorithm);
-						nodos.get(i).setSecond(true);
 					}
 				}
 			}
@@ -294,11 +325,11 @@ public abstract class Schedule
 	}
 	
 	private boolean isEmpty(List<Par<String,Boolean>> lista){
-		boolean tieneAlgo = false;
+		boolean algunoEsTrue = false;
 		for (Par<String, Boolean> par : lista) {
-			tieneAlgo = tieneAlgo || par.getSecond();
+			algunoEsTrue = algunoEsTrue || par.getSecond();
 		}
-		return !tieneAlgo;
+		return !algunoEsTrue; //Si ninguno es true -> está vacia.
 	}
 	
 	/*
@@ -331,7 +362,6 @@ public abstract class Schedule
 		try {
 			buildScheduleGraph().mostrar();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
