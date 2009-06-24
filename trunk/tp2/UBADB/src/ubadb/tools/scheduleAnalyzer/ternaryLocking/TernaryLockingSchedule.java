@@ -1,6 +1,7 @@
 package ubadb.tools.scheduleAnalyzer.ternaryLocking;
 
 import java.util.Iterator;
+import java.util.List;
 
 import ubadb.tools.scheduleAnalyzer.common.Action;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;

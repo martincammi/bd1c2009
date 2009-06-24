@@ -27,5 +27,11 @@ public class LegalResult
 	{
 		return message;
 	}
+	
+	public String toString(){
+		return "is Legal : " + isLegal + "\n" +
+			   "illegalTransaction: " + illegalTransaction + "\n" +
+			   "message: " + message; 
+	}
 
 }

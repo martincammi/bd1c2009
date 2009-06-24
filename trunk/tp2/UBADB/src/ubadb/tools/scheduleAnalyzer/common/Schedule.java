@@ -1,14 +1,15 @@
 package ubadb.tools.scheduleAnalyzer.common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Set;
 import java.util.TreeSet;
-
 
 import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityResult;
@@ -135,6 +136,7 @@ public abstract class Schedule
 			if(action.commits())
 			{
 				//Controla que no haya mas de un commit
+				//TODO: CONTROLAR PORQUE ESTA FUNCION NO FUNCIONA CORRECTAMENTE.
 				if(transaccionesValidas.contains(action.getTransaction()))
 				{
 					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por poseer dos commits.");
@@ -155,7 +157,20 @@ public abstract class Schedule
 		return new LegalResult(true, "", "La historia es legal.");
 	}
 	
+	private boolean tieneOtraOperacion(int index, String transaction)
+	{
+		List<Action> actions = getActions();
+		for (int indexAction = index; indexAction < actions.size(); indexAction++) {
+			Action action = actions.get(indexAction);
+			if (action.getTransaction() == transaction)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
+
 	public abstract ScheduleGraph buildScheduleGraph();
 	//[end]
 
