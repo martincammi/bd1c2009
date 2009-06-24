@@ -1,5 +1,7 @@
 package ubadb.tools.scheduleAnalyzer.binaryLocking;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import ubadb.tools.scheduleAnalyzer.common.Action;
@@ -139,14 +141,90 @@ public class BinaryLockingSchedule extends Schedule
 	@Override
 	public LegalResult analyzeLegality()
 	{
+		LegalResult result;
 		//TODO: Completar Analizar la legabilidad binario - por Fabrizio
 		//Un schedule es legal cuando:
 		//- Cada transaccin T posee como mximo un commit
+		//- Si T tiene COMMIT, éste es el último paso de la transacción.
+		result = aLoSumoUnCommit_y_esUltimo();
+		if (!result.isLegal())
+			return result;
+
 		//- Si T hace LOCK A, luego debe hacer UNLOCK A
 		//- Si T hace UNLOCK A, antes debe haber hecho LOCK A
 		//- Si T hace LOCK A, no puede volver a hacer LOCK A a menos que antes haya hecho UNLOCK A
 		//- Si T hace LOCK A, ninguna otra transaccin T' puede hacer LOCK A hasta que T libere a A
-		return null;
+		result = analyzeLockUnlockSeq();
+		if (!result.isLegal())
+			return result;
+
+		//La historia es legal.
+		return new LegalResult(true, "", "La historia es legal.");
+
 	}
 	//[end]
+	
+	//[start] analyzeLockUnlockSeq
+	private LegalResult analyzeLockUnlockSeq()
+	{
+		//- Si T hace LOCK A, luego debe hacer UNLOCK A
+		//- Si T hace UNLOCK A, antes debe haber hecho LOCK A
+		//- Si T hace LOCK A, no puede volver a hacer LOCK A a menos que antes haya hecho UNLOCK A
+		//- Si T hace LOCK A, ninguna otra transacción T' puede hacer LOCK A hasta que T libere a A
+		int indexUnlock;
+		//Collection transaccionesValidas = new HashSet();
+		List<Action> actions = getActions();
+		for (int indexAction = 0; indexAction < actions.size(); indexAction++) {
+			BinaryLockingAction action = (BinaryLockingAction) actions.get(indexAction);
+			//Guarda en una collection las transacciones que comienzan con un lock para si hay un unlock la transaccion que haga el unlock tiene que estar en esta collection
+			if (action.getType() == BinaryLockingActionType.LOCK)
+			{
+				indexUnlock = -1;
+				//controla que exista un unlock sobre el item para la misma transaccion 
+				for (int indexActionUnLock = (indexAction + 1); indexActionUnLock < actions.size(); indexActionUnLock++) {
+					BinaryLockingAction actionUnlock = (BinaryLockingAction)actions.get(indexActionUnLock);
+					//Solo controla los lock o unlock sobre el item que se hizo el lock.
+					if (action.getItem() == actionUnlock.getItem())
+					{
+						//Caso esperado para que la transaccion sea legal.
+						if (action.getType() == BinaryLockingActionType.UNLOCK && action.getTransaction() == actionUnlock.getTransaction())
+						{
+							indexUnlock = indexActionUnLock;
+							break;
+						}
+						//Un lock luego de un lock hace que la transaccion sea ilegal.
+						if (action.getType() == BinaryLockingActionType.LOCK && action.getTransaction() == actionUnlock.getTransaction())
+						{
+							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por no tener un lock luego del Lock sobre el item: " + action.getItem());
+						}
+						//Controla que otra transaccion no utilice el item antes que se haga el unlock.
+						if (action.getTransaction() != actionUnlock.getTransaction())
+						{
+							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal porque antes de hacer un ulock del item: " + action.getItem() + ", la transaccion " + actionUnlock.getTransaction() + " realizo una operacion sobre el mismo item.");
+						}
+					}
+				}
+				//en caso de encontrar el unlock lo remueve para no controlar nada sobre ese unlock que es valido
+				if (indexUnlock != -1)
+				{
+					actions.remove(indexUnlock);
+				}
+				//Si no se encontro un unlock se devuelve que la transaccion no es legal.
+				else
+				{
+					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por no tener un Unlock del Lock sobre el item: " + action.getItem());
+				}
+				
+			}
+			//Verifica que dado un unlock antes tenga un lock
+			if (action.getType() == BinaryLockingActionType.UNLOCK)
+			{
+				return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por hacer un unlock sin tener previamente un lock.");
+			}
+		}
+			
+		return new LegalResult(true, "", "La historia es legal.");
+	}
+	//[end]
+
 }
