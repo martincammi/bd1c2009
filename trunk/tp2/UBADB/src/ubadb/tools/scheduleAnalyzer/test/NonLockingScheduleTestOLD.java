@@ -57,7 +57,6 @@ public class NonLockingScheduleTestOLD {
 			sch.addAction(A8);
 			sch.addAction(A9);
 		} catch (ScheduleException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -106,7 +105,6 @@ public class NonLockingScheduleTestOLD {
 			schIlegal.addAction(A8);
 			schIlegal.addAction(A9);
 		} catch (ScheduleException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		LegalResult resultado = schIlegal.analyzeLegality();

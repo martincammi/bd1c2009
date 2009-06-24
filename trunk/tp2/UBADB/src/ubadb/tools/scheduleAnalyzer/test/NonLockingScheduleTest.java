@@ -63,7 +63,6 @@ public class NonLockingScheduleTest extends TestCase{
 			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3","X"));
 			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","X"));
 		} catch (ScheduleException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		LegalResult resultado = schIlegal.analyzeLegality();
