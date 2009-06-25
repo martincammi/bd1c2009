@@ -176,7 +176,7 @@ public abstract class Schedule
 		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
-		String message = "";
+		String message = "La historia es serial";
 		String transactionActual = "";
 		List<String> listTransaction = new ArrayList<String>();
 		for (Iterator iterator = actions.iterator(); iterator.hasNext();) 
@@ -191,6 +191,7 @@ public abstract class Schedule
 				{
 					isSerial = false;
 					nonSerialTransaction = act.getTransaction();
+					message = "La historia no es serial";
 					break;
 				}
 				else
@@ -226,12 +227,12 @@ public abstract class Schedule
 		ScheduleGraph graph = buildScheduleGraph();
 		List<List<String>> possibleExcecution = new ArrayList<List<String>>();
 		List<String> cycle = new ArrayList<String>();
-		String message = "La historia es serializable.";
+		String message = "Existe una secuencia de transacciones válida. La historia es serializable.";
 		isSerializable = !hasCycles(possibleExcecution, graph);
 		if (!isSerializable) //Se buscan los ciclos
 		{
 			getCycle(cycle, graph);
-			message = "La historia no es serializable.";
+			message = "Hay un ciclo. La historia no es serializable.";
 		}
 		SerializabilityResult result = new SerializabilityResult(isSerializable, possibleExcecution, cycle, message );
 		return result;
