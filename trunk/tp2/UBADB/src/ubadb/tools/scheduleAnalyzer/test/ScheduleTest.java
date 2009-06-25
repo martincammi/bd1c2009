@@ -14,6 +14,9 @@ import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingAction;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingActionType;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingSchedule;
+import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingAction;
+import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingActionType;
+import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingSchedule;
 
 public class ScheduleTest extends TestCase
 {
@@ -404,8 +407,8 @@ public class ScheduleTest extends TestCase
 			}
 			
 			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
 			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
 			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1","A"));
 			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","A"));
 			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2","A"));
@@ -421,4 +424,43 @@ public class ScheduleTest extends TestCase
 		System.out.println(lr.toString());
 		assertTrue(lr.isLegal());
 	}
+
+	public void testAnalyzeLegalityTernaryLocking(){
+		System.out.println("----Test testAnalyzeLegalityBinaryLocking-----");
+		Schedule sch = new TernaryLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 2;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 1;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.RLOCK,"T1","A"));
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T1","A"));
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.WLOCK,"T2","A"));
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T1","A"));
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T2","A"));
+			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T2","A"));
+
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		LegalResult lr = sch.analyzeLegality();
+		System.out.println(lr.toString());
+		assertTrue(lr.isLegal());
+	}
+
+
 }
