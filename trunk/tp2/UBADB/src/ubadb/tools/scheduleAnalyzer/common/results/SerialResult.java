@@ -27,4 +27,10 @@ public class SerialResult
 	{
 		return message;
 	}
+	
+	public String toString(){
+		return "is Serial : " + isSerial + "\n" +
+			   "nonSerialTransaction: " + nonSerialTransaction + "\n" +
+			   "message: " + message; 
+	}
 }

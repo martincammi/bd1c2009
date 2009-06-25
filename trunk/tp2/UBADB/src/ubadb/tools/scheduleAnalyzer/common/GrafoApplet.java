@@ -64,7 +64,7 @@ class DibujaGrafo extends Canvas {
 			g.drawString(this.grafo.getTransactions().get(i-1), (int) coordX + 10, (int) coordY);
 		}
 
-		System.out.println("arcos="+this.grafo.getArcs().size());
+		//System.out.println("arcos="+this.grafo.getArcs().size());
 		for (int j = 0; j < this.grafo.getArcs().size(); j++) {
 			
 			int it1 = this.getIndex(this.grafo.getTransactions(), this.grafo.getArcs().get(j).getStartTransaction());
