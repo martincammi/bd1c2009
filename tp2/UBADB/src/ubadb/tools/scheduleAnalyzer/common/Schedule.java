@@ -136,15 +136,10 @@ public abstract class Schedule
 			if(action.commits())
 			{
 				//Controla que no haya mas de un commit
-				//TODO: CONTROLAR PORQUE ESTA FUNCION NO FUNCIONA CORRECTAMENTE.
-				if(transaccionesValidas.contains(action.getTransaction()))
-				{
-					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por poseer dos commits.");
-				}
 				//Controla que luego de un commit no haya otra operacion para la misma transaccion.
-				else if (tieneOtraOperacion(indexAction + 1, action.getTransaction()))
+				if (tieneOtraOperacion(indexAction + 1, action.getTransaction()))
 				{
-					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por hacer un lock o unlock luego de haber realizado un commit.");
+					return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por hacer un lock o unlock luego de haber realizado un commit o por tener dos commits.");
 				}
 				else
 				{
