@@ -155,28 +155,28 @@ public class TernaryLockingSchedule extends Schedule
 		for (int indexAction = 0; indexAction < actions.size(); indexAction++) {
 			TernaryLockingAction action = (TernaryLockingAction) actions.get(indexAction);
 			//Guarda en una collection las transacciones que comienzan con un lock para si hay un unlock la transaccion que haga el unlock tiene que estar en esta collection
-			if (action.getType() == TernaryLockingActionType.RLOCK ||  action.getType() == TernaryLockingActionType.WLOCK)
+			if (action.getType().equals(TernaryLockingActionType.RLOCK)  ||  action.getType().equals(TernaryLockingActionType.WLOCK))
 			{
 				indexUnlock = -1;
 				//controla que exista un unlock sobre el item para la misma transaccion 
 				for (int indexActionUnLock = (indexAction + 1); indexActionUnLock < actions.size(); indexActionUnLock++) {
 					TernaryLockingAction actionUnlock = (TernaryLockingAction)actions.get(indexActionUnLock);
 					//Solo controla los lock o unlock sobre el item que se hizo el lock.
-					if (action.getItem() == actionUnlock.getItem())
+					if (action.getItem().equals(actionUnlock.getItem()) )
 					{
 						//Caso esperado para que la transaccion sea legal.
-						if (action.getType() == TernaryLockingActionType.UNLOCK && action.getTransaction() == actionUnlock.getTransaction())
+						if (actionUnlock.getType().equals(TernaryLockingActionType.UNLOCK) && action.getTransaction().equals(actionUnlock.getTransaction()))
 						{
 							indexUnlock = indexActionUnLock;
 							break;
 						}
 						//Un lock luego de un lock hace que la transaccion sea ilegal.
-						if ((action.getType() == TernaryLockingActionType.RLOCK ||  action.getType() == TernaryLockingActionType.WLOCK) && action.getTransaction() == actionUnlock.getTransaction())
+						if ((actionUnlock.getType().equals(TernaryLockingActionType.RLOCK)  ||  action.getType().equals(TernaryLockingActionType.WLOCK)) && action.getTransaction().equals(actionUnlock.getTransaction()))
 						{
 							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por no tener un lock luego del Lock sobre el item: " + action.getItem());
 						}
 						//Controla que otra transaccion no utilice el item antes que se haga el unlock.
-						if (action.getTransaction() != actionUnlock.getTransaction())
+						if (!actionUnlock.getTransaction().equals(actionUnlock.getTransaction()) && actionUnlock.getType().equals(TernaryLockingActionType.COMMIT))
 						{
 							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal porque antes de hacer un ulock del item: " + action.getItem() + ", la transaccion " + actionUnlock.getTransaction() + " realizo una operacion sobre el mismo item.");
 						}
