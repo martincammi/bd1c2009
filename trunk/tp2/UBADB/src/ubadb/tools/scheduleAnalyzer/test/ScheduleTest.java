@@ -1,15 +1,19 @@
 package ubadb.tools.scheduleAnalyzer.test;
 
 import junit.framework.TestCase;
+import ubadb.tools.scheduleAnalyzer.binaryLocking.BinaryLockingAction;
+import ubadb.tools.scheduleAnalyzer.binaryLocking.BinaryLockingActionType;
+import ubadb.tools.scheduleAnalyzer.binaryLocking.BinaryLockingSchedule;
 import ubadb.tools.scheduleAnalyzer.common.Schedule;
+import ubadb.tools.scheduleAnalyzer.common.results.LegalResult;
 import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityResult;
+import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityType;
 import ubadb.tools.scheduleAnalyzer.common.results.SerialResult;
 import ubadb.tools.scheduleAnalyzer.common.results.SerializabilityResult;
 import ubadb.tools.scheduleAnalyzer.exceptions.ScheduleException;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingAction;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingActionType;
 import ubadb.tools.scheduleAnalyzer.nonLocking.NonLockingSchedule;
-import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityType;
 
 public class ScheduleTest extends TestCase
 {
@@ -277,5 +281,144 @@ public class ScheduleTest extends TestCase
 		System.out.println(rr.toString());
 		assertTrue(rr.getType().equals(RecoverabilityType.RECOVERABLE));
 	}
+
+	public void testAnalyzeRecoverabilityRC4(){
+		System.out.println("----Test analyzeRecoverability RC 4-----");
+		Schedule sch = new NonLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 2;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 1;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		RecoverabilityResult rr = sch.analyzeRecoverability();
+		System.out.println(rr.toString());
+		assertTrue(rr.getType().equals(RecoverabilityType.STRICT));
+	}
 	
+	
+	public void testAnalyzeLegality(){
+		System.out.println("----Test analyzeLegality-----");
+		Schedule sch = new NonLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 2;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 1;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		LegalResult lr = sch.analyzeLegality();
+		System.out.println(lr.toString());
+		assertTrue(lr.isLegal());
+	}
+	
+	public void testAnalyzeLegality2(){
+		System.out.println("----Test analyzeLegality 2-----");
+		Schedule sch = new NonLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 2;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 1;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		LegalResult lr = sch.analyzeLegality();
+		System.out.println(lr.toString());
+		assertFalse(lr.isLegal());
+	}
+	
+	public void testAnalyzeLegalityBinaryLocking(){
+		System.out.println("----Test testAnalyzeLegalityBinaryLocking-----");
+		Schedule sch = new BinaryLockingSchedule();
+		
+		try 
+		{
+			//Agrega la cantidad de transacciones 
+			int numTnx = 2;
+			for (int i = 1; i <= numTnx; i++){
+				sch.addTransaction("T" + i);
+			}
+			
+			//Agrega la cantidad de items
+			int numItems = 1;
+			for (int i = 65; i <= numItems; i++){
+				sch.addItem((char)i + "");
+			}
+			
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","A"));
+			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2","A"));
+
+		} 
+		catch (ScheduleException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		//sch.showGraph();
+		LegalResult lr = sch.analyzeLegality();
+		System.out.println(lr.toString());
+		assertTrue(lr.isLegal());
+	}
 }
