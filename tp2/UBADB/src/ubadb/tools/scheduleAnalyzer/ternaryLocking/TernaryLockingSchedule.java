@@ -71,6 +71,11 @@ public class TernaryLockingSchedule extends Schedule
 	}
 	//[end]
 
+	/**
+	 * @author Grupo4 (todos)
+	 * A partir de la historia va agregando los arcos correspondientes al grafo.
+	 * para el esquema de TernaryLocking.
+	 */
 	private void addArcs(ScheduleGraph graph, int indexArc)
 	{
 		TernaryLockingAction action1 = (TernaryLockingAction) getActions().get(indexArc);
@@ -118,6 +123,10 @@ public class TernaryLockingSchedule extends Schedule
 	
 	//[start] analyzeLegality
 	@Override
+	/**
+	 * @author pablo.fabrizio
+	 * Analiza Legabilidad en el esquema de TernaryLocking.
+	 */
 	public LegalResult analyzeLegality()
 	{
 		LegalResult result;
@@ -143,6 +152,10 @@ public class TernaryLockingSchedule extends Schedule
 	//[end]
 	
 	//[start] analyzeLockUnlockSeq
+	/**
+	 * @author pablo.fabrizio
+	 * Analiza Legabilidad en el esquema de TernaryLocking.
+	 */
 	private LegalResult analyzeReadWriteLockUnlockSeq()
 	{
 		//- Si T hace UNLOCK A, antes debe haber hecho RLOCK A o WLOCK A

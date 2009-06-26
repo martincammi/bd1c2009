@@ -92,6 +92,11 @@ public class BinaryLockingSchedule extends Schedule
 	}
 	//[end]
 
+	/**
+	 * @author Grupo4 (todos)
+	 * A partir de la historia va agregando los arcos correspondientes al grafo.
+	 * para el esquema de BinaryLocking.
+	 */
 	private void addArcs(ScheduleGraph graph, int indexArc)
 	{
 		BinaryLockingAction action1 = (BinaryLockingAction) getActions().get(indexArc);
@@ -138,10 +143,14 @@ public class BinaryLockingSchedule extends Schedule
 
 	//[start] analyzeLegality
 	@Override
+	/**
+	 * @author pablo.fabrizio
+	 * Analiza Legabilidad en el esquema de BinaryLocking.
+	 */
 	public LegalResult analyzeLegality()
 	{
 		LegalResult result;
-		//TODO: Completar Analizar la legabilidad binario - por Fabrizio
+		//TODO: TERMINADO Analizar la legabilidad binario - por Fabrizio
 		//Un schedule es legal cuando:
 		//- Cada transaccin T posee como mximo un commit
 		//- Si T tiene COMMIT, éste es el último paso de la transacción.
@@ -164,6 +173,10 @@ public class BinaryLockingSchedule extends Schedule
 	//[end]
 	
 	//[start] analyzeLockUnlockSeq
+	/**
+	 * @author pablo.fabrizio
+	 * Analiza Legabilidad en el esquema de BinaryLocking.
+	 */
 	private LegalResult analyzeLockUnlockSeq()
 	{
 		//- Si T hace LOCK A, luego debe hacer UNLOCK A
@@ -194,7 +207,7 @@ public class BinaryLockingSchedule extends Schedule
 						//Un lock luego de un lock hace que la transaccion sea ilegal.
 						if (actionUnlock.getType().equals(BinaryLockingActionType.LOCK) && action.getTransaction().equals(actionUnlock.getTransaction()) )
 						{
-							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por tener un lock luego del Lock sobre el item: " + action.getItem());
+							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" realizaa un LOCK del item " + action.getItem() + " cuando las transaccion " + actionUnlock.getTransaction()+ " todavia no hizo UNLOCK");
 						}
 						//Controla que otra transaccion no utilice el item antes que se haga el unlock.
 						if (!action.getTransaction().equals(actionUnlock.getTransaction()) && !actionUnlock.getType().equals(BinaryLockingActionType.COMMIT))

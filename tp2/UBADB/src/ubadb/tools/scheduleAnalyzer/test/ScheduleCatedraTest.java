@@ -21,6 +21,24 @@ import ubadb.tools.scheduleAnalyzer.common.results.RecoverabilityType;
 public class ScheduleCatedraTest extends TestCaseBase{
 	
 	/**
+	 *  Evalua				Casos de Test	
+	 *  Legalidad:  		   1 - 6
+	 *  Serial: 			   7 - 8
+	 *  Serializabilidad:      9 - 15
+	 *  Recuperabilidad:	   16 - 20
+	 */
+	
+	/**
+	 * Cobertura de los Tests
+	 * 
+	 *  	Objetivo		NonLocking		 BinaryLocking		 TernaryLocking
+	 *	   Legalidad  		   1				2,3,4				  5,6
+	 *       Serial 		  7,8	   	   (mismo para todas)    (mismo para todas)
+	 *  Serializabilidad      9,10				 11				  12,13,14,15
+	 *  Recuperabilidad	   16,17,18,19	   (mismo para todas)   (mismo para todas)
+	 */
+	
+	/**
 	 * Objetivo: Legalidad.
 	 * Tipo: Sin Locking.
 	 * Resultado: No es legal. T2 tiene dos commits.
@@ -40,7 +58,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
 
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());
 	}
 
@@ -68,7 +86,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1"));
 
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());
 	}
 	
@@ -91,7 +109,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2"));
 
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());
 	}
 	
@@ -113,7 +131,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1"));
 
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());
 	}
 
@@ -134,7 +152,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T1"));
 		
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());
 	}
 	
@@ -161,7 +179,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T1","B"));
 		
 		LegalResult res = sch.analyzeLegality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isLegal());		
 	}
 
@@ -183,7 +201,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
 		
 		SerialResult res = sch.analyzeSeriality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerial());		
 	}
 	
@@ -207,7 +225,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
 		
 		SerialResult res = sch.analyzeSeriality();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isSerial());	
 	}
 	
@@ -229,7 +247,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isSerializable());
 		//TODO: No deberia agregar a T3 en el ciclo. El grafo está OK.
 		//assertFalse(true); 
@@ -238,7 +256,14 @@ public class ScheduleCatedraTest extends TestCaseBase{
 	/**
 	 * Objetivo: Serializabilidad
 	 * Tipo: Sin Locking.
-	 * Resultado: Sin ciclos.
+	 * Resultado: Sin ciclos. 
+	 * Ordenes posibles:
+		T1,T2,T3.
+		T1,T3,T2.
+		T2,T1,T3.
+		T2,T3,T1.
+		T3,T2,T1.
+		T3,T1,T2.
 	 */
 	public void testCaso10(){
 		show("Caso10");
@@ -253,14 +278,15 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerializable());
 	}
 
 	/**
 	 * Objetivo: Serializabilidad
 	 * Tipo: Locking Binario.
-	 * Resultado: Sin ciclos.
+	 * Resultado: Sin ciclos. 
+	 * Ordenes posibles: T5,T4,T3,T2,T1..
 	 */
 	public void testCaso11(){
 		show("Caso11");
@@ -293,14 +319,15 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T3"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerializable());
 	}
 	
 	/**
 	 * Objetivo: Serializabilidad
 	 * Tipo: Locking Ternario.
-	 * Resultado: Sin ciclos. Órdenes: T1,T2 y T2,T1.
+	 * Resultado: Sin ciclos. 
+	 * Ordenes: T1,T2 y T2,T1.
 	 */
 	public void testCaso12(){
 		show("Caso12");
@@ -321,7 +348,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 	
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerializable());
 	}
 	
@@ -355,7 +382,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T4"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertFalse(res.isSerializable());
 		//TODO: martin.cammi Ver porque el ciclo no queda en el mismo orden. 
 		//Creo que saca otros arcos transitivos ver
@@ -365,6 +392,13 @@ public class ScheduleCatedraTest extends TestCaseBase{
 	 * Objetivo: Serializabilidad
 	 * Tipo: Locking Ternario.
 	 * Resultado: Sin Ciclos. 
+	 * Órdenes Posibles:
+		T1,T2,T3,T4.
+		T1,T3,T2,T4.
+		T1,T3,T4,T2.
+		T3,T1,T2,T4.
+		T3,T4,T1,T2
+		T3,T1,T4,T2
 	 */
 	public void testCaso14(){
 		show("Caso14");
@@ -389,7 +423,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		//TODO: ¿Falta commit t4? sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T4"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerializable());
 	}
 	
@@ -397,6 +431,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 	 * Objetivo: Serializabilidad
 	 * Tipo: Locking Ternario.
 	 * Resultado: Sin Ciclos.
+	 * Ordenes Posibles: T4,T1,T3,T2.
 	 */
 	public void testCaso15(){
 		show("Caso15");
@@ -424,7 +459,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T1","D"));
 		
 		SerializabilityResult res = sch.analyzeSerializability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(res.isSerializable());
 	}
 	
@@ -432,6 +467,7 @@ public class ScheduleCatedraTest extends TestCaseBase{
 	 * Objetivo: Nivel de Recuperabilidad
 	 * Tipo: Sin Locking.
 	 * Resultado: Recuperable.
+	 * Conflicto: T1 lee X, dato que escribió T2, y T2 todavía no comiteó.
 	 */
 	public void testCaso16(){
 		show("Caso16");
@@ -449,14 +485,110 @@ public class ScheduleCatedraTest extends TestCaseBase{
 		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
 				
 		RecoverabilityResult res = sch.analyzeRecoverability();
-		System.out.println(res.toString());
+		show(res.toString());
 		assertTrue(RecoverabilityType.RECOVERABLE.equals(res.getType()));
 	}
-	/*
-	public void testCaso17(){}
-	public void testCaso18(){}
-	public void testCaso19(){}
-	public void testCaso20(){}
-	*/
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Estricta.
+	 * Conflicto: No hay. 
+	 */
+	public void testCaso17(){
+		show("Caso17");
+		Schedule sch = getNonLockingSchedule(2);
+ 
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+				
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.STRICT.equals(res.getType()));
+		//TODO, si la transaccion es estricta no mostrar las transacciones en conflicto.
+	}
+	
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: No recuperable.
+	 * Conflicto: T1 lee X, dato que escribió T2, y T1 comitea antes que T2.
+	 */
+	public void testCaso18(){
+		show("Caso18");
+		Schedule sch = getNonLockingSchedule(3);
+ 
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+				
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.NON_RECOVERABLE.equals(res.getType()));
+	}
+
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: ACA
+	 * Conflicto: T2 escribe X, dato que escribió T1 previamente, y T1 todavía no comiteó.
+	 */
+	public void testCaso19(){
+		show("Caso19");
+		Schedule sch = getNonLockingSchedule(3);
+ 
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+				
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.AVOIDS_CASCADING_ABORTS.equals(res.getType()));
+	}
+	
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Recuperable.
+	 * Conflicto1: T1 lee X, un dato que escribió T2, y T2 todavía no comiteó.
+	 * Conflicto2: T2 lee Z, un dato que escribió T3, y T3 todavía no comiteó. 
+	 */
+	public void testCaso20(){
+		show("Caso20");
+		Schedule sch = getNonLockingSchedule(3);
+ 
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+				
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.RECOVERABLE.equals(res.getType()));
+	}
+
 	
 }
