@@ -67,6 +67,10 @@ public class BinaryLockingSchedule extends Schedule
 */
 	//[start] buildScheduleGraph
 	@Override
+	/**
+	 * @author andres.melendez
+	 * Construye el grafo para el esquema de BinaryLocking.
+	 */
 	public ScheduleGraph buildScheduleGraph()
 	{
 		//Completar Armar Grafo binario - por Matias
@@ -93,7 +97,7 @@ public class BinaryLockingSchedule extends Schedule
 	//[end]
 
 	/**
-	 * @author Grupo4 (todos)
+	 * @author andres.melendez
 	 * A partir de la historia va agregando los arcos correspondientes al grafo.
 	 * para el esquema de BinaryLocking.
 	 */
@@ -153,7 +157,7 @@ public class BinaryLockingSchedule extends Schedule
 		//TODO: TERMINADO Analizar la legabilidad binario - por Fabrizio
 		//Un schedule es legal cuando:
 		//- Cada transaccin T posee como mximo un commit
-		//- Si T tiene COMMIT, éste es el último paso de la transacción.
+		//- Si T tiene COMMIT, ï¿½ste es el ï¿½ltimo paso de la transacciï¿½n.
 		result = aLoSumoUnCommit_y_esUltimo();
 		if (!result.isLegal())
 			return result;
@@ -182,7 +186,7 @@ public class BinaryLockingSchedule extends Schedule
 		//- Si T hace LOCK A, luego debe hacer UNLOCK A
 		//- Si T hace UNLOCK A, antes debe haber hecho LOCK A
 		//- Si T hace LOCK A, no puede volver a hacer LOCK A a menos que antes haya hecho UNLOCK A
-		//- Si T hace LOCK A, ninguna otra transacción T' puede hacer LOCK A hasta que T libere a A
+		//- Si T hace LOCK A, ninguna otra transacciï¿½n T' puede hacer LOCK A hasta que T libere a A
 		int indexUnlock;
 		//Collection transaccionesValidas = new HashSet();
 		List<Action> actions = getActions();

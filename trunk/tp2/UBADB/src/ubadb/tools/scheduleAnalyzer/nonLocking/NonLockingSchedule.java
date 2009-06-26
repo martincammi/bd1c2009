@@ -41,13 +41,17 @@ public class NonLockingSchedule extends Schedule
 	
 	//[start] buildScheduleGraph
 	@Override
+	/**
+	 * @author andres.melendez
+	 * Construye el grafo para el esquema de NonLocking.
+	 */
 	public ScheduleGraph buildScheduleGraph()
 	{
-		//TERMINADO: Completar
+		//TERMINADO: 
 		//Se deben agregar arcos entre T1 -> T2 cuando:
-		//- T1 lee un ítem A y T2 luego escribe A
-		//- T1 escribe un ítem A y T2 luego lee A
-		//- T1 escribe un ítem A y T2 luego escribe A
+		//- T1 lee un ï¿½tem A y T2 luego escribe A
+		//- T1 escribe un ï¿½tem A y T2 luego lee A
+		//- T1 escribe un ï¿½tem A y T2 luego escribe A
 		//OBS: No agregar arcos que se deducen por transitividad
 		
 		ScheduleGraph graph = new ScheduleGraph();
@@ -68,7 +72,7 @@ public class NonLockingSchedule extends Schedule
 	//[end]
 
 	/**
-	 * @author Grupo4 (todos)
+	 * @author andres.melendez
 	 * A partir de la historia va agregando los arcos correspondientes al grafo
 	 * para el esquema de NonLocking.
 	 */

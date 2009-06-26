@@ -45,6 +45,10 @@ public class TernaryLockingSchedule extends Schedule
 	
 	//[start] buildScheduleGraph
 	@Override
+	/**
+	 * @author andres.melendez
+	 * Construye el grafo para el esquema de TernaryLocking.
+	 */
 	public ScheduleGraph buildScheduleGraph()
 	{
 		//TODO: Completar Construir Grafo ternario - Andres
@@ -72,7 +76,7 @@ public class TernaryLockingSchedule extends Schedule
 	//[end]
 
 	/**
-	 * @author Grupo4 (todos)
+	 * @author andres.melendez
 	 * A partir de la historia va agregando los arcos correspondientes al grafo.
 	 * para el esquema de TernaryLocking.
 	 */

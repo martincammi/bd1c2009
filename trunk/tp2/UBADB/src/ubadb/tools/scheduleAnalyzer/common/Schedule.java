@@ -132,8 +132,8 @@ public abstract class Schedule
 	 */
 	public LegalResult aLoSumoUnCommit_y_esUltimo()
 	{
-		//- Cada transacción T posee como máximo un commit
-		//- Si T tiene COMMIT, éste es el último paso de la transacción.
+		//- Cada transacciï¿½n T posee como mï¿½ximo un commit
+		//- Si T tiene COMMIT, ï¿½ste es el ï¿½ltimo paso de la transacciï¿½n.
 		Collection transaccionesValidas = new HashSet();
 		List<Action> actions = getActions();
 		for (int indexAction = 0; indexAction < actions.size(); indexAction++) {
@@ -180,7 +180,7 @@ public abstract class Schedule
 
 	//[start] analyzeSeriality
 	/**
-	 *  @author grupo4 todos.
+	 *  @author andres.melendez.
 	 *  Analiza la seriabilidad de una historia.
 	 */
 	public SerialResult analyzeSeriality()
@@ -239,7 +239,7 @@ public abstract class Schedule
 		ScheduleGraph graph = buildScheduleGraph();
 		List<List<String>> possibleExcecution = new ArrayList<List<String>>();
 		List<String> cycle = new ArrayList<String>();
-		String message = "Existe una secuencia de transacciones válida. La historia es serializable.";
+		String message = "Existe una secuencia de transacciones vï¿½lida. La historia es serializable.";
 		isSerializable = !hasCycles(possibleExcecution, graph);
 		if (!isSerializable) //Se buscan los ciclos
 		{
@@ -391,36 +391,11 @@ public abstract class Schedule
 		return !algunoEsTrue; //Si ninguno es true -> estï¿½ vacia.
 	}
 	
-	/*
-	private boolean tieneCiclosA(List<List<String>> possibleExcecutions, List<String> cycle)
-	{
-		ScheduleGraph graph = buildScheduleGraph();
-		List<String> nodos = graph.getTransactions();
-		List<String> oneExec = new ArrayList<String>();
-		Iterator iter = nodos.iterator();
-		
-		for (; iter.hasNext();) {
-			String tnx = (String) iter.next();
-			if(!graph.isDependence(tnx)){
-				nodos.remove(tnx);
-				iter = nodos.iterator();
-				oneExec.add(tnx);
-				graph.removeTransaction(tnx);
-			}
-		}
-		if(nodos.size() == 0){
-			possibleExcecutions.add(oneExec);
-		}
-		
-		return nodos.size() > 0; //Si quedï¿½ algun nodo en la lista significa que algunos de ellos o todos forman un ciclo
-	}*/
-	
 	/** 
 	 * @author andres.melendez
 	 * Muestra el grafo, solo para Debug 
 	 */
 	public void showGraph(){
-		//System.out.println(buildScheduleGraph().toString());
 		try {
 			buildScheduleGraph().mostrar();
 		} catch (InterruptedException e) {
