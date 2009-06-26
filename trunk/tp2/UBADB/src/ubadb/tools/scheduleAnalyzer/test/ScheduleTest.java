@@ -18,449 +18,313 @@ import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingAction;
 import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingActionType;
 import ubadb.tools.scheduleAnalyzer.ternaryLocking.TernaryLockingSchedule;
 
-public class ScheduleTest extends TestCase
+/**
+ * @author Grupo4
+ * Casos de test propios. 
+ *
+ */
+public class ScheduleTest extends TestCaseBase
 {
-	/*//Reeemplazado por el TestSuit
-	public void testAll()
-	{
-		isSerial();
-		isSerializable();
-		isNotSerializable1();
-	}*/	
+
+	/**
+	 *  Evalua				Casos de Test	
+	 *  Legalidad:  		   1 - 5
+	 *  Serial: 			     6
+	 *  Serializabilidad:      7 - 9
+	 *  Recuperabilidad:	   10 -13	   
+	 */
 	
-	public void testIsSerial()
-	{
-		System.out.println("----Test Serial-----");
-		NonLockingSchedule sch = new NonLockingSchedule();
-		try 
-		{
-			sch.addTransaction("T1");
-			sch.addTransaction("T2");
-			sch.addTransaction("T3");
-			sch.addItem("X");
-			sch.addItem("Y");
-			sch.addItem("Z");
-			NonLockingAction A0 = new NonLockingAction(NonLockingActionType.READ,"T1","X");
-			NonLockingAction A1 = new NonLockingAction(NonLockingActionType.WRITE,"T1","X");
-			NonLockingAction A2 = new NonLockingAction(NonLockingActionType.WRITE,"T1","Y");
-			NonLockingAction A3 = new NonLockingAction(NonLockingActionType.READ,"T2","Y");
-			NonLockingAction A4 = new NonLockingAction(NonLockingActionType.READ,"T2","Y");
-			NonLockingAction A5 = new NonLockingAction(NonLockingActionType.READ,"T2","Z");
-			NonLockingAction A6 = new NonLockingAction(NonLockingActionType.READ,"T3","Z");
-			NonLockingAction A7 = new NonLockingAction(NonLockingActionType.READ,"T3","Y");
-			NonLockingAction A8 = new NonLockingAction(NonLockingActionType.READ,"T3","X");
-			NonLockingAction A9 = new NonLockingAction(NonLockingActionType.WRITE,"T3","X");
-			sch.addAction(A0);
-			sch.addAction(A1);
-			sch.addAction(A2);
-			sch.addAction(A3);
-			sch.addAction(A4);
-			sch.addAction(A5);
-			sch.addAction(A6);
-			sch.addAction(A7);
-			sch.addAction(A8);
-			sch.addAction(A9);
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		SerialResult result = sch.analyzeSeriality();
-		System.out.println(result.isSerial());
-		System.out.println(result.getNonSerialTransaction());
+	/**
+	 * Cobertura de los Tests
+	 * 
+	 *  	Objetivo		NonLocking		 BinaryLocking		 TernaryLocking
+	 *	   Legalidad  		   1				2,3,4				   5
+	 *       Serial 		   6	   	   (mismo para todas)    (mismo para todas)
+	 *  Serializabilidad      7,8,9				 --				  		--
+	 *  Recuperabilidad	   10,11,12,13	   (mismo para todas)   (mismo para todas)
+	 */
+	
+	/**
+	 * Objetivo: Legalidad.
+	 * Tipo: Sin Locking.
+	 * Resultado: Es legal.
+	 */
+	public void testCaso1(){
+		show("Caso9");
+		Schedule sch = getNonLockingSchedule(2);
+		
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		
+		LegalResult res = sch.analyzeLegality();
+		show(res.toString());
+		assertTrue(res.isLegal());
+	}
+	
+	/**
+	 * Objetivo: Legalidad.
+	 * Tipo: Binary Locking.
+	 * Resultado: No es legal. T1 intenta hacer un lock de B cuando T2 no hizo el Unlock.
+	 */
+	public void testCaso2(){
+		show("Caso10");
+		Schedule sch = getBinaryLockingSchedule(2);
+		
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","B"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","B"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","B"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1"));
+ 
+		LegalResult res = sch.analyzeLegality();
+		show(res.toString());
+		assertFalse(res.isLegal());
+	}
+	
+	/**
+	 * Objetivo: Legalidad.
+	 * Tipo: Binary Locking.
+	 * Resultado: No es legal. T1 no hace UNLOCK de A
+	 */
+	public void testCaso3(){
+		show("Caso11");
+		Schedule sch = getBinaryLockingSchedule(2);
+		
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","B"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","B"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1"));
+ 
+		LegalResult res = sch.analyzeLegality();
+		show(res.toString());
+		assertFalse(res.isLegal());
+	}
+	
+	/**
+	 * Objetivo: Legalidad.
+	 * Tipo: Binary Locking.
+	 * Resultado: No es legal. T1 hace lock de A cuando T2 no hizo UNLOCK todavia.
+	 */
+	public void testCaso4(){
+		show("Caso12");
+		Schedule sch = getBinaryLockingSchedule(2);
+		
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","A"));
+		sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2"));
+
+		LegalResult res = sch.analyzeLegality();
+		show(res.toString());
+		assertFalse(res.isLegal());
 	}
 
-	public void testIsSerializable(){
-		System.out.println("----Test is Serializable-----");
-		Schedule sch = new NonLockingSchedule();
-		
-		
-		try 
-		{
-			sch.addTransaction("T1");
-			sch.addTransaction("T2");
-			sch.addTransaction("T3");
-			sch.addTransaction("T4");
-			sch.addTransaction("T5");
-			
-			sch.addItem("A");
-			sch.addItem("B");
-			sch.addItem("C");
-			sch.addItem("D");
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","C"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T5","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","C"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		//sch.showGraph();
-		SerializabilityResult sr = sch.analyzeSerializability();
-		System.out.println(sr.toString());
-		assertTrue(sr.isSerializable());
+	/**
+	 * Objetivo: Legalidad.
+	 * Tipo: Locking Ternario.
+	 * Resultado: Ess legal.
+	 */
+	public void testCaso5(){
+		show("Caso13");
+		Schedule sch = getTernaryLockingSchedule(2);
+
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.RLOCK,"T1","A"));
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T1","A"));
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.WLOCK,"T2","A"));
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T1","A"));
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T2","A"));
+		sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T2","A"));
+
+		LegalResult res = sch.analyzeLegality();
+		show(res.toString());
+		assertTrue(res.isLegal());
 	}
 	
-	public void testIsNotSerializable1(){
-		System.out.println("----Test is not Serializable 1-----");
-		Schedule sch = new NonLockingSchedule();
+	/**
+	 * Objetivo: Plan Serial
+	 * Tipo: Sin Locking.
+	 * Resultado: Es Serial.
+	 */
+	public void testCaso6()	{
+		show("Caso1");
+		Schedule sch = getNonLockingSchedule(3);
 		
-		try 
-		{
-			sch.addTransaction("T1");
-			sch.addTransaction("T2");
-			sch.addTransaction("T3");
-			
-			sch.addItem("A");
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","Z"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","Y"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","X"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","X"));
 		
-		//sch.showGraph();
-		SerializabilityResult sr = sch.analyzeSerializability();
-		System.out.println(sr.toString());
-		assertTrue(!sr.isSerializable());
-	}
-	
-	public void testIsNotSerializable2(){
-		System.out.println("----Test is not Serializable 2-----");
-		Schedule sch = new NonLockingSchedule();
-		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 5;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 4;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","C"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","C"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","C"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","D"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","D"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		//sch.showGraph();
-		SerializabilityResult sr = sch.analyzeSerializability();
-		System.out.println(sr.toString());
-		assertTrue(!sr.isSerializable());
-	}
-	
-	public void testAnalyzeRecoverabilityRC(){
-		System.out.println("----Test analyzeRecoverability RC-----");
-		Schedule sch = new NonLockingSchedule();
-		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 3;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		//sch.showGraph();
-		RecoverabilityResult rr = sch.analyzeRecoverability();
-		System.out.println(rr.toString());
-		assertTrue(rr.getType().equals(RecoverabilityType.RECOVERABLE));
-	}
-	
-	public void testAnalyzeRecoverabilityRC2(){
-		System.out.println("----Test analyzeRecoverability RC 2-----");
-		Schedule sch = new NonLockingSchedule();
-		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		//sch.showGraph();
-		RecoverabilityResult rr = sch.analyzeRecoverability();
-		System.out.println(rr.toString());
-		assertTrue(rr.getType().equals(RecoverabilityType.STRICT));
-	}
-	public void testAnalyzeRecoverabilityRC3(){
-		System.out.println("----Test analyzeRecoverability RC3-----");
-		Schedule sch = new NonLockingSchedule();
-		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 4;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 2; // items A y B
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A")); //NO CUMPLE ACA
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","B"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B")); //NO CUMPLE ESTRICTO, PERO YA ROMPIA ACA
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		//sch.showGraph();
-		RecoverabilityResult rr = sch.analyzeRecoverability();
-		System.out.println(rr.toString());
-		assertTrue(rr.getType().equals(RecoverabilityType.RECOVERABLE));
+		SerialResult res = sch.analyzeSeriality();
+		show(res.toString());
+		assertTrue(res.isSerial());
 	}
 
-	public void testAnalyzeRecoverabilityRC4(){
-		System.out.println("----Test analyzeRecoverability RC 4-----");
-		Schedule sch = new NonLockingSchedule();
+	/**
+	 * Objetivo: Serializabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: No hay ciclos. Luego, es serializable.
+	 */
+	public void testCaso7(){
+		show("Caso2");
+		Schedule sch = getNonLockingSchedule(5);
 		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","C"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T5","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","C"));
 		
-		//sch.showGraph();
-		RecoverabilityResult rr = sch.analyzeRecoverability();
-		System.out.println(rr.toString());
-		assertTrue(rr.getType().equals(RecoverabilityType.STRICT));
+		SerializabilityResult res = sch.analyzeSerializability();
+		show(res.toString());
+		assertTrue(res.isSerializable());
 	}
 	
-	
-	public void testAnalyzeLegality(){
-		System.out.println("----Test analyzeLegality-----");
-		Schedule sch = new NonLockingSchedule();
+	/**
+	 * Objetivo: Serializabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Hay ciclos. Luego, no es serializable.
+	 */
+	public void testCaso8(){
+		show("Caso3");
+		Schedule sch = getNonLockingSchedule(3);
 		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
 		
-		//sch.showGraph();
-		LegalResult lr = sch.analyzeLegality();
-		System.out.println(lr.toString());
-		assertTrue(lr.isLegal());
+		SerializabilityResult res = sch.analyzeSerializability();
+		show(res.toString());
+		assertFalse(res.isSerializable());
 	}
 	
-	public void testAnalyzeLegality2(){
-		System.out.println("----Test analyzeLegality 2-----");
-		Schedule sch = new NonLockingSchedule();
+	/**
+	 * Objetivo: Serializabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Hay ciclos. Luego, no es serializable.
+	 */
+	public void testCaso9(){
+		show("Caso4");
+		Schedule sch = getNonLockingSchedule(5);
 		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-			sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","C"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","C"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","C"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T5","D"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T4","D"));
 		
-		//sch.showGraph();
-		LegalResult lr = sch.analyzeLegality();
-		System.out.println(lr.toString());
-		assertFalse(lr.isLegal());
+		SerializabilityResult res = sch.analyzeSerializability();
+		show(res.toString());
+		assertFalse(res.isSerializable());
 	}
 	
-	public void testAnalyzeLegalityBinaryLocking(){
-		System.out.println("----Test testAnalyzeLegalityBinaryLocking-----");
-		Schedule sch = new BinaryLockingSchedule();
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Recuperable.
+	 * Conflicto: T2 lee A, un dato que escribió T1, y T1 todavía no comiteó.
+	 */
+	public void testCaso10(){
+		show("Caso5");
+		Schedule sch = getNonLockingSchedule(3);
 		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T1","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.LOCK,"T2","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T1","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T1","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.UNLOCK,"T2","A"));
-			sch.addAction(new BinaryLockingAction(BinaryLockingActionType.COMMIT,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A")); //NO CUMPLE ACA.
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+		
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.RECOVERABLE.equals(res.getType()));
+	}
+	
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Estricto.
+	 */
+	public void testCaso11(){
+		show("Caso6");
+		Schedule sch = getNonLockingSchedule(2);
+		
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
 
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.STRICT.equals(res.getType()));
+	}
+	
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Recuperable.
+	 * Conflicto: T2 lee A, un dato que escribió T1, y T1 todavía no comiteó.
+	 */
+	public void testCaso12(){
+		show("Caso7");
+		Schedule sch = getNonLockingSchedule(4);
 		
-		//sch.showGraph();
-		LegalResult lr = sch.analyzeLegality();
-		System.out.println(lr.toString());
-		assertTrue(lr.isLegal());
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T2","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T2","A")); //NO CUMPLE ACA.
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T3","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T2"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T3","B"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T4","B")); //NO CUMPLE ESTRICTO.
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T3"));
+	
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.RECOVERABLE.equals(res.getType()));
 	}
 
-	public void testAnalyzeLegalityTernaryLocking(){
-		System.out.println("----Test testAnalyzeLegalityBinaryLocking-----");
-		Schedule sch = new TernaryLockingSchedule();
+	/**
+	 * Objetivo: Nivel de Recuperabilidad
+	 * Tipo: Sin Locking.
+	 * Resultado: Estricto.
+	 */
+	public void testCaso13(){
+		show("Caso8");
+		Schedule sch = getNonLockingSchedule(2);
 		
-		try 
-		{
-			//Agrega la cantidad de transacciones 
-			int numTnx = 2;
-			for (int i = 1; i <= numTnx; i++){
-				sch.addTransaction("T" + i);
-			}
-			
-			//Agrega la cantidad de items
-			int numItems = 1;
-			for (int i = 65; i <= numItems; i++){
-				sch.addItem((char)i + "");
-			}
-			
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.RLOCK,"T1","A"));
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T1","A"));
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.WLOCK,"T2","A"));
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T1","A"));
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.UNLOCK,"T2","A"));
-			sch.addAction(new TernaryLockingAction(TernaryLockingActionType.COMMIT,"T2","A"));
-
-		} 
-		catch (ScheduleException e) 
-		{
-			e.printStackTrace();
-		}
+		sch.addAction(new NonLockingAction(NonLockingActionType.WRITE,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.READ,"T1","A"));
+		sch.addAction(new NonLockingAction(NonLockingActionType.COMMIT,"T1"));
 		
-		//sch.showGraph();
-		LegalResult lr = sch.analyzeLegality();
-		System.out.println(lr.toString());
-		assertTrue(lr.isLegal());
+		RecoverabilityResult res = sch.analyzeRecoverability();
+		show(res.toString());
+		assertTrue(RecoverabilityType.STRICT.equals(res.getType()));
 	}
+	
+	
 
 
 }

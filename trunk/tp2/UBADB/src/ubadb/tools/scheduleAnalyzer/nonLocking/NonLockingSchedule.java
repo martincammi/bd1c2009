@@ -67,6 +67,11 @@ public class NonLockingSchedule extends Schedule
 	}
 	//[end]
 
+	/**
+	 * @author Grupo4 (todos)
+	 * A partir de la historia va agregando los arcos correspondientes al grafo
+	 * para el esquema de NonLocking.
+	 */
 	private void addArcs(ScheduleGraph graph, int indexArc)
 	{
 		NonLockingAction actionAux = (NonLockingAction) getActions().get(indexArc);
@@ -109,9 +114,13 @@ public class NonLockingSchedule extends Schedule
 	//TERMINADO
 	//[start] analyzeLegality
 	@Override
+	/**
+	 * @author pablo.fabrizio
+	 * Analiza Legabilidad en el esquema de NonLocking.
+	 */
 	public LegalResult analyzeLegality()
 	{
-		//TERMINADO: Completar
+		//TODO: TERMINADO
 		return aLoSumoUnCommit_y_esUltimo();
 	}
 	//[end]

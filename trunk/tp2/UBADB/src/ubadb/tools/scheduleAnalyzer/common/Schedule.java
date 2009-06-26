@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -125,6 +126,10 @@ public abstract class Schedule
 	//[start] Mtodos Abstractos
 	public abstract LegalResult analyzeLegality();
 
+	/**
+	 * @author pablo.fabrizio
+	 * Verifica que cada tnx tenga a lo sumo un commit y sea la ultima operacion.
+	 */
 	public LegalResult aLoSumoUnCommit_y_esUltimo()
 	{
 		//- Cada transacción T posee como máximo un commit
@@ -152,6 +157,10 @@ public abstract class Schedule
 		return new LegalResult(true, "", "La historia es legal.");
 	}
 	
+	/**
+	 * @author pablo.fabrizio
+	 * 
+	 */
 	private boolean tieneOtraOperacion(int index, String transaction)
 	{
 		List<Action> actions = getActions();
@@ -170,9 +179,12 @@ public abstract class Schedule
 	//[end]
 
 	//[start] analyzeSeriality
+	/**
+	 *  @author grupo4 todos.
+	 *  Analiza la seriabilidad de una historia.
+	 */
 	public SerialResult analyzeSeriality()
 	{
-		//TODO: Casos de Test con BinaryLocking y TernaryLocking Martï¿½n Cammi
 		//Un schedule es serial si para toda transaccin, todas sus acciones aparecen consecutivas dentro del schedule
 		boolean isSerial = true;
 		String nonSerialTransaction = "";
@@ -328,7 +340,10 @@ public abstract class Schedule
 		findCycle(cycle, nodos, graph, shutdownAlgorithm);
 	}
 	
-	
+	/**
+	 * @author martin.cammi
+	 * Cncuentra el ciclo del grafo. 
+	 */
 	private void findCycle(List<String> cycle, List<Par<String,Boolean>> nodos, ScheduleGraph graph, boolean shutdownAlgorithm){
 		
 		//Todos los nodos estï¿½n deshabilitados y no se pide shutdown.
@@ -400,7 +415,10 @@ public abstract class Schedule
 		return nodos.size() > 0; //Si quedï¿½ algun nodo en la lista significa que algunos de ellos o todos forman un ciclo
 	}*/
 	
-	/** Muestra el grafo, solo para Debug */
+	/** 
+	 * @author andres.melendez
+	 * Muestra el grafo, solo para Debug 
+	 */
 	public void showGraph(){
 		//System.out.println(buildScheduleGraph().toString());
 		try {
@@ -409,7 +427,23 @@ public abstract class Schedule
 			e.printStackTrace();
 		}
 	}
+	
+	private boolean containsAllExcept(Set<String> setTotal, Set<String> setToContain, String transaction){
+		boolean containAll = true;
+		for(String tnx : setToContain){
+			
+			if(!tnx.equals(transaction)){
+				containAll = containAll && setTotal.contains(tnx);
+			}
+		}
+		return containAll;
+	}
+	
 	//[start] analyzeRecoverability
+	/**
+	 *  @author matias.perez
+	 *  Analiza la recuperabilidad de una historia.
+	 */
 	public RecoverabilityResult analyzeRecoverability()
 	{
 		//TODO: Casos de Testing faltan - Recuperabilidad - Pasa 3 que hay
@@ -451,7 +485,8 @@ public abstract class Schedule
 				// Si leo un item que alguien escribiÃ³
 				if (escritoPor.get(item) != null) 
 				{
-					boolean tjsComiteadas = comiteadas.containsAll(escritoPor.get(item));
+					//boolean tjsComiteadas = comiteadas.containsAll(escritoPor.get(item));
+					boolean tjsComiteadas = containsAllExcept(comiteadas,escritoPor.get(item),transaction);
 					
 					if (aca)
 					{
@@ -465,7 +500,7 @@ public abstract class Schedule
 							String t2 = transaction;
 							RecoverabilityType type = RecoverabilityType.RECOVERABLE;
 							
-							res = new RecoverabilityResult(type, t1, t2, "La transaccion "+t2+" lee el item "+item+" de "+t1+" antes de que "+t1+" realize un commit" ) ;
+							res = new RecoverabilityResult(type, t1, t2, "La transaccion "+t2+" lee el item "+item+" que escribio "+t1+" antes de que "+t1+" realize un commit" ) ;
 						}
 						// Lo pongo adentro del if porque si no es ACA ni vale la pena ver si es estricto
 						// Esto es para consistencia, porque
@@ -499,7 +534,8 @@ public abstract class Schedule
 				{
 					// transaction escribe el item previamente escrito por escritoPor.get(item) 
 					// Si escritoPor.get(item) no hizo commit, entonces no cumple Estricto
-					boolean tjsComiteadas = comiteadas.containsAll( escritoPor.get(item) );
+					//boolean tjsComiteadas = comiteadas.containsAll( escritoPor.get(item) );
+					boolean tjsComiteadas = containsAllExcept(comiteadas,escritoPor.get(item), transaction);
 					estricto = estricto && tjsComiteadas;
 					
 					if (!estricto)
@@ -529,7 +565,8 @@ public abstract class Schedule
 				// Todas de las que leo estÃ¡n commiteadas
 				boolean tjsComiteadas = true;
 				if (leeDe.get(transaction) != null) //Si no lee de nadie lo dejo true
-					tjsComiteadas = comiteadas.containsAll(leeDe.get(transaction));
+					//tjsComiteadas = comiteadas.containsAll(leeDe.get(transaction));
+					tjsComiteadas = containsAllExcept(comiteadas,leeDe.get(transaction), transaction);
 										
 				recuperable = recuperable && tjsComiteadas;
 				

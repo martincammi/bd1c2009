@@ -32,6 +32,7 @@ public class TestCaseBase extends TestCase{
 	/*Non Locking Methods*/
 	protected NonLockingSchedule getNonLockingSchedule() {
 		nonLckSch = new NonLockingSchedule(); 
+		setCantTnxNonLocking(10);
 		return nonLckSch; 
 	}
 	protected NonLockingSchedule getNonLockingSchedule(int numTnx, int numItems) {
@@ -56,6 +57,7 @@ public class TestCaseBase extends TestCase{
 	/*Binary Locking Methods*/
 	protected BinaryLockingSchedule getBinaryLockingSchedule() {
 		binLckSch = new BinaryLockingSchedule();
+		setCantTnxBinaryLocking(10);
 		return binLckSch ;
 	}
 	protected BinaryLockingSchedule getBinaryLockingSchedule(int numTnx) {
@@ -80,6 +82,7 @@ public class TestCaseBase extends TestCase{
 	/*Ternary Locking Methods*/
 	protected TernaryLockingSchedule getTernaryLockingSchedule() {
 		terLckSch = new TernaryLockingSchedule();
+		setCantTnxTernaryLocking(10);
 		return terLckSch;
 	}
 	protected TernaryLockingSchedule getTernaryLockingSchedule(int numTnx, int numItems) {
