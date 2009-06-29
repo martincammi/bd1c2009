@@ -193,7 +193,7 @@ public class TernaryLockingSchedule extends Schedule
 							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal por no tener un lock luego del Lock sobre el item: " + action.getItem());
 						}
 						//Controla que otra transaccion no utilice el item antes que se haga el unlock.
-						if (!actionUnlock.getTransaction().equals(actionUnlock.getTransaction()) && actionUnlock.getType().equals(TernaryLockingActionType.COMMIT))
+						if (!action.getTransaction().equals(actionUnlock.getTransaction()) && actionUnlock.getType().equals(TernaryLockingActionType.COMMIT))
 						{
 							return new LegalResult(false, action.getTransaction(), "la transaccion "+action.getTransaction()+" hace que la historia sea ilegal porque antes de hacer un ulock del item: " + action.getItem() + ", la transaccion " + actionUnlock.getTransaction() + " realizo una operacion sobre el mismo item.");
 						}
